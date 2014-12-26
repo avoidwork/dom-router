@@ -1,8 +1,7 @@
 ( function ( document, window ) {
 "use strict";
 
-var $ = document.querySelectorAll.bind( document ),
-	not_hash = /.*\#/,
+var not_hash = /.*\#/,
 	time = new Date().getTime(),
 	render;
 
