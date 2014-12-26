@@ -1,20 +1,19 @@
 /**
  * URL hash to DOM router
  *
- * @param {Object} arg Descriptor
  * @constructor
  */
-function Router ( arg ) {
-	this.active = arg.active !== undefined ? ( arg.active === true ) : true;
-	this.callback = arg.callback || null;
-	this.css = arg.css || {active: "active", hidden: "hidden"};
-	this.ctx = arg.ctx || $("body")[0];
-	this["default"] = arg["default"] || null;
+function Router () {
+	this.active = null;
+	this.callback = null;
+	this.css = {active: "active", hidden: "hidden"};
+	this.ctx = null;
+	this["default"] = null;
 	this.history = [];
-	this.log = arg.log !== undefined ? ( arg.log === true ) : false;
+	this.log = false;
 	this.routes = [];
-	this.selector = arg.selector || null;
-	this.stop = arg.stop !== undefined ? ( arg.stop === true ) : true;
+	this.selector = null;
+	this.stop = true;
 }
 
 /**
@@ -42,8 +41,8 @@ Router.prototype.current = function () {
  * @return {Undefined} undefined
  */
 Router.prototype.hashchange = function ( ev ) {
-	var oldHash = ev.oldURL.indexOf( "#" ) > -1 ? ev.oldURL.replace( NOTHASH, "" ) : null,
-		newHash = ev.newURL.indexOf( "#" ) > -1 ? ev.newURL.replace( NOTHASH, "" ) : null,
+	var oldHash = contains( ev.oldURL, "#" ) ? ev.oldURL.replace( not_hash, "" ) : null,
+		newHash = contains( ev.newURL, "#" ) ? ev.newURL.replace( not_hash, "" ) : null,
 		$oldEl, $newEl, $oldItem, $newItem, r;
 
 	if ( ( oldHash ? contains( this.routes, oldHash ) : true ) && ( newHash ? contains( this.routes, newHash ) : false ) ) {
@@ -58,26 +57,28 @@ Router.prototype.hashchange = function ( ev ) {
 			ev.stopPropagation();
 		}
 
-		if ( $oldItem && $oldEl ) {
-			$oldItem.parentNode.classList.remove( this.css.active );
-			$oldEl.classList.add( this.css.hidden );
-		}
+		render( function () {
+			if ( $oldItem && $oldEl ) {
+				$oldItem.parentNode.classList.remove( this.css.active );
+				$oldEl.classList.add( this.css.hidden );
+			}
 
-		if ( $newItem && $newEl ) {
-			$newItem.parentNode.classList.add( this.css.active );
-			$newEl.classList.remove( this.css.hidden );
-		}
-		else if ( this[ "default" ] ) {
-			this.route( this["default"] );
-		}
+			if ( $newItem && $newEl ) {
+				$newItem.parentNode.classList.add( this.css.active );
+				$newEl.classList.remove( this.css.hidden );
+			}
+			else if ( this[ "default" ] ) {
+				this.route( this["default"] );
+			}
 
-		if ( this.log === true ) {
-			this.history.unshift( r );
-		}
+			if ( this.log === true ) {
+				this.history.unshift( r );
+			}
 
-		if ( this.callback !== null ) {
-			this.callback( r );
-		}
+			if ( this.callback !== null ) {
+				this.callback( r );
+			}
+		} );
 	}
 };
 
@@ -101,22 +102,31 @@ Router.prototype.route = function ( arg ) {
  * @return {Object} Router
  */
 function router ( arg ) {
-	var r = new Router( arg ),
+	var r = new Router(),
 		hash = document.location.hash.replace( "#", "" );
 
 	// Adding hook
 	window.addEventListener( "hashchange", r.hashchange, false );
 
-	// Setting routes
+	// Setting properties
+	r.active = arg.active !== undefined ? ( arg.active === true ) : true;
+	r.callback = arg.callback || null;
+	r.ctx = arg.ctx || $("body")[0];
+	r.log = arg.log !== undefined ? ( arg.log === true ) : false;
+	r.selector = arg.selector || null; // forgot what this was for :(
+	r.stop = arg.stop !== undefined ? ( arg.stop === true ) : true;
+
+	if ( arg.css ) {
+		r.css = { active: "active", hidden: "hidden" };
+	}
+
 	r.routes = $( r.ctx + " a" ).filter( function ( a ) {
 		return contains( a.href, "#" );
 	} ).map( function ( a ) {
-		return a.href.replace( NOTHASH, "" );
+		return a.href.replace( not_hash, "" );
 	} );
 
-	if ( r["default"] === null ) {
-		r["default"] = r.routes[0];
-	}
+	r["default"] = arg["default"] || r.routes[0];
 
 	// Setting state
 	if ( !r.ctx.classList.hasClass( r.css.hidden ) ) {

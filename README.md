@@ -11,14 +11,15 @@ you to handle the application state change the way you want.
 var router = require('dom-router'),
     r;
 
-// Router will write to console `onhashchange`
+// Router will write to console on `hashchange`
 r = router({callback: function (arg) {
     console.log(arg.element.id, "is visible");
 });
 ```
 
 ## How can I load dom-router?
-dom-router can be installed from npm, & bower, and supports CJS, AMD, & script tags. When loaded with a script tag, `window.router` will be created.
+dom-router can be installed from npm, & bower, and supports CJS, AMD, & script tags.
+When loaded with a script tag, `window.router` will be created.
 
 ## Configuration
 #### active
@@ -26,6 +27,9 @@ dom-router can be installed from npm, & bower, and supports CJS, AMD, & script t
 
 #### callback
 Function to execute after route has changed, takes `arg` which describes the event
+
+#### css
+`Object` with `active`, & `hidden` keys which have corresponding CSS class values, defaults to "active", & "hidden"
 
 #### ctx
 Context for DOM selector, defaults to `body` if not specified
@@ -39,8 +43,7 @@ Returns the current `Route`, if logging is enabled
 
 
 ## Requirements
-- CSS class named `hidden` to toggle display/visibility/other attribute.
-- `Element.classList` API
+- `Element.classList` API, or shim
 
 ## License
 Copyright (c) 2014 Jason Mulligan
