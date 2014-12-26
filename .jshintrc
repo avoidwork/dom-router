@@ -26,6 +26,7 @@
 		"console": true,
 		"process": true,
 		"module": true,
-		"define": true
+		"define": true,
+		"CustomEvent": true
 	}
 }

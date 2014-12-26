@@ -17,6 +17,9 @@ module.exports = function (grunt) {
 			dist : {
 				src : [
 					"src/intro.js",
+					"src/contains.js",
+					"src/dispatch.js",
+					"src/hashchange.js",
 					"src/route.js",
 					"src/router.js",
 					"src/outro.js"
@@ -42,7 +45,7 @@ module.exports = function (grunt) {
 				sourceMap: true,
 				sourceMapIncludeSources: true,
 				mangle: {
-					except: ["Router", "Descriptor", "define", "export"]
+					except: ["Router", "Descriptor", "CustomEvent", "define", "export"]
 				}
 			},
 			target: {

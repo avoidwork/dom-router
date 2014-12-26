@@ -37,6 +37,11 @@ Logs routing to `router.history[]` if enabled, defaults to `false` (could be a m
 #### current()
 Returns the current `Route`, if logging is enabled
 
+
+## Requirements
+- CSS class named `hidden` to toggle display/visibility/other attribute.
+- `Element.classList` API
+
 ## License
 Copyright (c) 2014 Jason Mulligan
 Licensed under the BSD-3 license
