@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>dom-router by avoidwork</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>dom-router</h1>
+        <p>URL hash to DOM router</p>
+
+        <p class="view"><a href="https://github.com/avoidwork/dom-router">View the Project on GitHub <small>avoidwork/dom-router</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/avoidwork/dom-router/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/avoidwork/dom-router/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/avoidwork/dom-router">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>DOM router which automatically, &amp; intelligently toggles visibility of <code>Elements</code> based on <code>hashchange</code> events.
+This provides a clean separation of concerns, and progressive enhancement in a simple library. A <code>callback</code> allows
+you to handle the application state change the way you want.</p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> router <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>dom-router<span class="pl-pds">'</span></span>),
+    r;
+
+<span class="pl-c">// Router will write to console on `hashchange`</span>
+r <span class="pl-k">=</span> router({<span class="pl-en">callback</span>: <span class="pl-st">function</span> (<span class="pl-vpf">arg</span>) {
+    <span class="pl-en">console</span><span class="pl-s3">.log</span>(arg.element.<span class="pl-sc">id</span>, <span class="pl-s1"><span class="pl-pds">"</span>is visible<span class="pl-pds">"</span></span>);
+}});</pre></div>
+
+<h2>
+<a id="how-can-i-load-dom-router" class="anchor" href="#how-can-i-load-dom-router" aria-hidden="true"><span class="octicon octicon-link"></span></a>How can I load dom-router?</h2>
+
+<p>dom-router can be installed from npm, &amp; bower, and supports CJS, AMD, &amp; script tags.
+When loaded with a script tag, <code>window.router</code> will be created.</p>
+
+<h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<h4>
+<a id="active" class="anchor" href="#active" aria-hidden="true"><span class="octicon octicon-link"></span></a>active</h4>
+
+<p><code>Boolean</code> which enables/disables routing</p>
+
+<h4>
+<a id="callback" class="anchor" href="#callback" aria-hidden="true"><span class="octicon octicon-link"></span></a>callback</h4>
+
+<p>Function to execute after route has changed, takes <code>arg</code> which describes the event</p>
+
+<h4>
+<a id="css" class="anchor" href="#css" aria-hidden="true"><span class="octicon octicon-link"></span></a>css</h4>
+
+<p><code>Object</code> with <code>active</code>, &amp; <code>hidden</code> keys which have corresponding CSS class values, defaults to "active", &amp; "hidden"</p>
+
+<h4>
+<a id="ctx" class="anchor" href="#ctx" aria-hidden="true"><span class="octicon octicon-link"></span></a>ctx</h4>
+
+<p>Context for DOM selector, defaults to <code>body</code> if not specified</p>
+
+<h4>
+<a id="log" class="anchor" href="#log" aria-hidden="true"><span class="octicon octicon-link"></span></a>log</h4>
+
+<p>Logs routing to <code>router.history[]</code> if enabled, defaults to <code>false</code> (could be a memory leak if logging is enabled and target <code>Elements</code> are removed from DOM)</p>
+
+<h2>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
+
+<h4>
+<a id="current" class="anchor" href="#current" aria-hidden="true"><span class="octicon octicon-link"></span></a>current()</h4>
+
+<p>Returns the current <code>Route</code>, if logging is enabled</p>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<ul>
+<li>
+<code>Element.classList</code> API, or shim</li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Copyright (c) 2014 Jason Mulligan
+Licensed under the BSD-3 license</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/avoidwork">avoidwork</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
