@@ -1,8 +1,8 @@
 /**
- * Determines if `arg` is in Array `obj`
+ * Determines if `arg` is in `obj`
  *
  * @method contains
- * @param  {Array} obj Array to inspect
+ * @param  {Mixed} obj Object to inspect
  * @param  {Mixed} arg Value to find
  * @return {Boolean}   `true` if found
  */
