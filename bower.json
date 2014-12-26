@@ -1,0 +1,30 @@
+{
+  "name": "dom-router",
+  "version": "1.0.0",
+  "homepage": "https://github.com/avoidwork/dom-router",
+  "authors": [
+    "Jason Mulligan <jason.mulligan@avoidwork.com>"
+  ],
+  "description": "Tiny graph data structure for Client or Server",
+  "main": "lib/dom-router.min.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "proxy",
+    "Object"
+  ],
+  "license": "BSD-3",
+  "ignore": [
+    "**/.*",
+    "doc",
+    "node_modules",
+    "bower_components",
+    "src",
+    "test",
+    "tests",
+    "docstrap.json"
+  ]
+}
