@@ -14,7 +14,7 @@ var router = require('dom-router'),
 // Router will write to console on `hashchange`
 r = router({callback: function (arg) {
     console.log(arg.element.id, "is visible");
-});
+}});
 ```
 
 ## How can I load dom-router?
