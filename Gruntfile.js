@@ -26,14 +26,26 @@ module.exports = function (grunt) {
 				dest : "lib/<%= pkg.name %>.js"
 			}
 		},
+		copy: {
+			test: {
+				files: [
+					{expand: true, flatten: true, src: ["lib/<%= pkg.name %>.js"], dest: "test/www"}
+				]
+			}
+		},
 		jshint : {
 			options : {
 				jshintrc : ".jshintrc"
 			},
 			src : "lib/<%= pkg.name %>.js"
 		},
-		nodeunit : {
-			all : ["test/*.js"]
+		mochaTest : {
+			options: {
+				reporter: "spec"
+			},
+			test : {
+				src : ["test/*_test.js"]
+			}
 		},
 		uglify: {
 			options: {
@@ -67,13 +79,17 @@ module.exports = function (grunt) {
 
 	// tasks
 	grunt.loadNpmTasks("grunt-contrib-concat");
-	grunt.loadNpmTasks("grunt-contrib-nodeunit");
+	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
+	grunt.loadNpmTasks("grunt-mocha-test");
+	grunt.loadNpmTasks("grunt-nsp-package");
 
 	// aliases
-	grunt.registerTask("test", ["jshint"/*, "nodeunit"*/]);
-	grunt.registerTask("build", ["concat", "test"]);
+	grunt.registerTask("test", ["jshint", "mochaTest"]);
+	grunt.registerTask("build", ["concat", "copy", "test"]);
 	grunt.registerTask("default", ["build", "uglify"]);
+	grunt.registerTask("validate", "validate-package");
+	grunt.registerTask("package", ["validate", "default"]);
 };

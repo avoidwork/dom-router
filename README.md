@@ -29,7 +29,7 @@ When loaded with a script tag, `window.router` will be created.
 Function to execute after route has changed, takes `arg` which describes the event
 
 #### css
-`Object` with `active`, & `hidden` keys which have corresponding CSS class values, defaults to "active", & "hidden"
+`Object` with `current`, & `hidden` keys which have corresponding CSS class values, defaults to "current", & "hidden"
 
 #### ctx
 Context for DOM selector, defaults to `body` if not specified

@@ -103,7 +103,8 @@ Router.prototype.current = function () {
  * @return {Undefined} undefined
  */
 Router.prototype.hashchange = function ( ev ) {
-	var oldHash = contains( ev.oldURL, "#" ) ? ev.oldURL.replace( not_hash, "" ) : null,
+	var self = this,
+		oldHash = contains( ev.oldURL, "#" ) ? ev.oldURL.replace( not_hash, "" ) : null,
 		newHash = contains( ev.newURL, "#" ) ? ev.newURL.replace( not_hash, "" ) : null;
 
 	if ( this.active && ( oldHash ? contains( this.routes, oldHash ) : true ) && ( newHash ? contains( this.routes, newHash ) : false ) ) {
@@ -113,36 +114,36 @@ Router.prototype.hashchange = function ( ev ) {
 		}
 
 		render( function () {
-			var oldHashes = oldHash ? oldHash.split( this.delimiter ) : [],
-				newHashes = newHash.split( this.delimiter ),
+			var oldHashes = oldHash ? oldHash.split( self.delimiter ) : [],
+				newHashes = newHash.split( self.delimiter ),
 				r, newEl, newTrigger;
 
 			newHashes.forEach( function ( i, idx ) {
 				var nth = idx + 1,
 					valid = oldHashes.length >= nth,
-					oldEl = valid ? this.select( "#" + oldHashes.slice( 0, nth ).join( " > #") )[0] : null,
-					oldTrigger = valid ? this.select( "a[href='#" + oldHashes.slice( 0, nth ).join( this.delimiter ) + "']" )[0] : null;
+					oldEl = valid ? self.select( "#" + oldHashes.slice( 0, nth ).join( " > #" ) )[ 0 ] : null,
+					oldTrigger = valid ? self.select( "a[href='#" + oldHashes.slice( 0, nth ).join( self.delimiter ) + "']" )[ 0 ] : null;
 
-				newEl = this.select( "#" + newHashes.slice( 0, nth ).join( " > #") )[0];
-				newTrigger = this.select( "a[href='#" + newHashes.slice( 0, nth ).join( this.delimiter ) + "']" )[0];
+				newEl = self.select( "#" + newHashes.slice( 0, nth ).join( " > #" ) )[ 0 ];
+				newTrigger = self.select( "a[href='#" + newHashes.slice( 0, nth ).join( self.delimiter ) + "']" )[ 0 ];
 
-				this.load( oldTrigger || null, oldEl || null, newTrigger || null, newEl || null );
+				self.load( oldTrigger || null, oldEl || null, newTrigger || null, newEl || null );
 			}, this );
 
-			if ( this.css.current && this.history.length > 0 ) {
-				this.history[0 ].trigger.classList.remove( this.css.current );
+			if ( self.css.current && self.history.length > 0 ) {
+				self.history[ 0 ].trigger.classList.remove( self.css.current );
 			}
 
 			r = route( { element: newEl || null, hash: newHash, trigger: newTrigger || null } );
 
-			if ( this.log === true ) {
-				this.history.unshift( r );
+			if ( self.log === true ) {
+				self.history.unshift( r );
 			}
 
-			if ( this.callback !== null ) {
-				this.callback( r );
+			if ( self.callback !== null ) {
+				self.callback( r );
 			}
-		}.bind( this ) );
+		} );
 	}
 };
 
@@ -194,7 +195,7 @@ Router.prototype.route = function ( arg ) {
  * @return {Object} Router
  */
 Router.prototype.sweep = function ( obj, klass ) {
-	[].slice.call( obj.parentNode.childNodes ).filter( function ( i ){
+	[].slice.call( obj.parentNode.childNodes ).filter( function ( i ) {
 		return i.nodeType === 1 && i.id && i.id !== obj.id;
 	} ).forEach( function ( i ) {
 		i.classList.add( klass );
@@ -217,12 +218,9 @@ function router ( arg ) {
 		hashes, t;
 
 	// Adding hook
-	if ( typeof window.addEventListener == "function" ) {
-		window.addEventListener( "hashchange", r.hashchange.bind( r ), false );
-	}
-	else {
-		window.onhashchange = r.hashchange.bind( r );
-	}
+	window.addEventListener( "hashchange", function ( ev ) {
+		r.hashchange.call( r, ev );
+	}, false );
 
 	// Setting properties
 	r.active = arg.active !== undefined ? ( arg.active === true ) : true;
@@ -231,15 +229,15 @@ function router ( arg ) {
 	r.ctx = arg.ctx && typeof arg.ctx.querySelectorAll == "function" ? arg.ctx : document.body;
 	r.delimiter = arg.delimiter || "/";
 	r.log = arg.log !== undefined ? ( arg.log === true ) : false;
-	r.select = r.ctx.querySelectorAll.bind( r.ctx );
+	r.select = function ( arg ) {
+		return [].slice.call( r.ctx.querySelectorAll.call( r.ctx, arg ) );
+	};
 	r.stop = arg.stop !== undefined ? ( arg.stop === true ) : true;
-
-	r.routes = [].slice.call( r.select( "a" ) ).filter( function ( i ) {
+	r.routes = r.select( "a" ).filter( function ( i ) {
 		return contains( i.href, "#" );
 	} ).map( function ( i ) {
 		return i.href.replace( not_hash, "" );
 	} );
-
 	r[ "default" ] = arg[ "default" ] || r.routes[ 0 ];
 
 	// Setting state
