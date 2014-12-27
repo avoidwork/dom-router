@@ -52,7 +52,7 @@ Router.prototype.hashchange = function ( ev ) {
 		}
 
 		render( function () {
-			var oldHashes = oldHash.split( this.delimiter ),
+			var oldHashes = oldHash ? oldHash.split( this.delimiter ) : [],
 				newHashes = newHash.split( this.delimiter ),
 				r, newEl, newTrigger;
 
@@ -106,12 +106,7 @@ Router.prototype.load = function ( oldTrigger, oldEl, newTrigger, newEl ) {
 	}
 
 	if ( newEl ) {
-		[].slice.call( newEl.parentNode.childNodes ).filter( function ( i ){
-			return i.nodeType === 1 && i.id && i.id !== newEl.id;
-		} ).forEach( function ( i ) {
-			i.classList.add( this.css.hidden );
-		}, this );
-		newEl.classList.remove( this.css.hidden );
+		this.sweep( newEl, this.css.hidden );
 	}
 
 	return this;
@@ -130,6 +125,26 @@ Router.prototype.route = function ( arg ) {
 };
 
 /**
+ * Sweeps the surrounding nodes and toggles a class
+ *
+ * @method sweep
+ * @param  {Object} obj
+ * @param  {String} klass
+ * @return {Object} Router
+ */
+Router.prototype.sweep = function ( obj, klass ) {
+	[].slice.call( obj.parentNode.childNodes ).filter( function ( i ){
+		return i.nodeType === 1 && i.id && i.id !== obj.id;
+	} ).forEach( function ( i ) {
+		i.classList.add( klass );
+	}, this );
+
+	obj.classList.remove( klass );
+
+	return this;
+};
+
+/**
  * Router factory
  *
  * @param  {Object} arg Descriptor
@@ -138,7 +153,7 @@ Router.prototype.route = function ( arg ) {
 function router ( arg ) {
 	var r = new Router(),
 		hash = document.location.hash.replace( "#", "" ),
-		a, t;
+		hashes, t;
 
 	// Adding hook
 	if ( typeof window.addEventListener == "function" ) {
@@ -168,18 +183,26 @@ function router ( arg ) {
 
 	// Setting state
 	if ( !( r.css.hidden in r.ctx.classList ) ) {
-		if ( hash !== "" && contains( r.routes, hash ) ) {
-			t = r.select( "#" + hash )[ 0 ];
-			if ( t ) {
-				t.classList.remove( r.css.hidden );
-			}
+		t = r.ctx;
 
-			if ( r.css.current ) {
-				a = r.select( "a[href='#" + hash + "']" )[ 0 ];
-				if ( a ) {
-					a.classList.add( r.css.current );
+		if ( hash !== "" && contains( r.routes, hash ) ) {
+			hashes = hash.split( r.delimiter );
+			hashes.forEach( function ( i, idx ) {
+				var a;
+
+				t = t.querySelector( "#" + i );
+
+				if ( t ) {
+					r.sweep( t, r.css.hidden );
 				}
-			}
+
+				if ( r.css.current ) {
+					a = r.select( "a[href='#" + hashes.slice( 0, idx + 1 ).join( r.delimiter ) + "']" )[ 0 ];
+					if ( a ) {
+						a.classList.add( r.css.current );
+					}
+				}
+			} );
 		}
 		else {
 			r.route( r[ "default" ] );
