@@ -68,6 +68,10 @@ Router.prototype.hashchange = function ( ev ) {
 				this.load( oldTrigger || null, oldEl || null, newTrigger || null, newEl || null );
 			}, this );
 
+			if ( this.css.current && this.history.length > 0 ) {
+				this.history[0 ].trigger.classList.remove( this.css.current );
+			}
+
 			r = route( { element: newEl || null, hash: newHash, trigger: newTrigger || null } );
 
 			if ( this.log === true ) {
@@ -89,21 +93,24 @@ Router.prototype.hashchange = function ( ev ) {
  * @return {Object}     Router
  */
 Router.prototype.load = function ( oldTrigger, oldEl, newTrigger, newEl ) {
-	if ( oldTrigger && oldEl ) {
-		if ( this.css.current ) {
-			oldTrigger.classList.remove( this.css.current );
-		}
-
-		if ( oldEl.id !== newEl.id ) {
-			oldEl.classList.add( this.css.hidden );
-		}
+	if ( oldTrigger && this.css.current ) {
+		oldTrigger.classList.remove( this.css.current );
 	}
 
-	if ( newTrigger && newEl ) {
-		if ( this.css.current ) {
-			newTrigger.classList.add( this.css.current );
-		}
+	if ( oldEl && oldEl.id !== newEl.id ) {
+		oldEl.classList.add( this.css.hidden );
+	}
 
+	if ( newTrigger && this.css.current ) {
+		newTrigger.classList.add( this.css.current );
+	}
+
+	if ( newEl ) {
+		[].slice.call( newEl.parentNode.childNodes ).filter( function ( i ){
+			return i.nodeType === 1 && i.id && i.id !== newEl.id;
+		} ).forEach( function ( i ) {
+			i.classList.add( this.css.hidden );
+		}, this );
 		newEl.classList.remove( this.css.hidden );
 	}
 

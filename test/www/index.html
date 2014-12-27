@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .hidden {
+            display: none;
+        }
+        .current {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="#main">Main</a></li>
+            <li><a href="#settings/billing" class="settings">Billing</a></li>
+            <li><a href="#settings/password" class="settings">Password</a></li>
+            <li><a href="#settings/avatar" class="settings">Avatar</a></li>
+        </ul>
+    </nav>
+</header>
+<article>
+    <section id="main">
+        <h1>Main</h1>
+        <h2>Hello World!</h2>
+    </section>
+    <section id="settings" class="hidden">
+        <h1>Settings</h1>
+        <section id="billing" class="hidden">
+            <h2>Billing</h2>
+        </section>
+        <section id="password" class="hidden">
+            <h2>Password</h2>
+        </section>
+        <section id="avatar" class="hidden">
+            <h2>Avatar</h2>
+        </section>
+    </section>
+</article>
+<footer>
+    dom-router test
+</footer>
+</body>
+<script type="application/javascript" src="dom-router.js"></script>
+<script type="application/javascript">
+r = router({log: true, callback: function (arg) {
+    console.log(arg.element.id, "is visible");
+}});
+</script>
+</html>
