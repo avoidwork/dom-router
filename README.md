@@ -38,18 +38,14 @@ Context for DOM selector, defaults to `body` if not specified
 Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each tier should map to a nested `id`
 
 ```html
-<...>
-  <section id="main">
-    ...
-  </section>
-  ...
+<article>
+  <section id="main">...</section>
   <section id="settings">
-    ...
-    <section id="billing">
-      ...
-    </section>
+    <section id="billing">...</section>
+    <section id="password">...</section>
+    <section id="avatar">...</section>
   </section>
-</...>
+</article>
 ```
 
 #### log
