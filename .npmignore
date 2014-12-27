@@ -1,7 +1,7 @@
 /.idea/
 /node_modules/
-/lib/tiny-graph.min.js
-/lib/tiny-graph.min.js.map
+/lib/dom-router.min.js
+/lib/dom-router.min.js.map
 /src/
 /test/
 .git
@@ -9,3 +9,5 @@
 .jshintrc
 .travis.yml
 Gruntfile.js
+bower.json
+
