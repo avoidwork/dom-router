@@ -28,12 +28,64 @@
         </ul>
       </header>
       <section>
-        <p>DOM router which automatically, &amp; intelligently toggles visibility of <code>Elements</code> based on <code>hashchange</code> events.
-This provides a clean separation of concerns, and progressive enhancement in a simple library. A <code>callback</code> allows
-you to handle the application state change the way you want.</p>
+        <p>Imagine you didn't have to write a bunch of JavaScript to get a slick, progressively enhanced interface! <code>dom-router</code>
+is a URL hash to DOM router which automatically, &amp; intelligently toggles visibility of <code>Elements</code> based on <code>hashchange</code>
+events.</p>
+
+<p>This provides a clean separation of concerns, and progressive enhancement in a simple library. You can write clean HTML,
+and <code>dom-router</code> will progressively enhance the interface with CSS classes (not supplied). DOM updates happen on an
+animation frame to minimize impacting your application. An optional <code>callback</code> allows you to handle application
+state changes the way you want.</p>
 
 <h2>
 <a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<h4>
+<a id="before-routing-is-enabled" class="anchor" href="#before-routing-is-enabled" aria-hidden="true"><span class="octicon octicon-link"></span></a>Before routing is enabled</h4>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">nav</span>&gt;
+  &lt;<span class="pl-ent">ul</span>&gt;
+    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#main<span class="pl-pds">"</span></span>&gt;Main&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/billing<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Billing&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/password<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Password&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/avatar<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Avatar&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
+  &lt;/<span class="pl-ent">ul</span>&gt;
+&lt;/<span class="pl-ent">nav</span>&gt;
+...
+&lt;<span class="pl-ent">article</span>&gt;
+  &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>main<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
+  &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>billing<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
+    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>password<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
+    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>avatar<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
+  &lt;/<span class="pl-ent">section</span>&gt;
+&lt;/<span class="pl-ent">article</span>&gt;</pre></div>
+
+<h4>
+<a id="after-routing-is-enabled" class="anchor" href="#after-routing-is-enabled" aria-hidden="true"><span class="octicon octicon-link"></span></a>After routing is enabled</h4>
+
+<p>This would be the result if a user visited <code>#settings/billing</code>:</p>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">nav</span>&gt;
+  &lt;<span class="pl-ent">ul</span>&gt;
+    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#main<span class="pl-pds">"</span></span>&gt;Main&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/billing<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings current<span class="pl-pds">"</span></span>&gt;Billing&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/password<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Password&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
+    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/avatar<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Avatar&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
+  &lt;/<span class="pl-ent">ul</span>&gt;
+&lt;/<span class="pl-ent">nav</span>&gt;
+...
+&lt;<span class="pl-ent">article</span>&gt;
+  &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>main<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
+  &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>billing<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
+    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>password<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
+    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>avatar<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
+  &lt;/<span class="pl-ent">section</span>&gt;
+&lt;/<span class="pl-ent">article</span>&gt;</pre></div>
+
+<h4>
+<a id="minimal-coding-required" class="anchor" href="#minimal-coding-required" aria-hidden="true"><span class="octicon octicon-link"></span></a>Minimal coding required</h4>
 
 <div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> router <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>dom-router<span class="pl-pds">'</span></span>),
     r;
@@ -65,7 +117,7 @@ When loaded with a script tag, <code>window.router</code> will be created.</p>
 <h4>
 <a id="css" class="anchor" href="#css" aria-hidden="true"><span class="octicon octicon-link"></span></a>css</h4>
 
-<p><code>Object</code> with <code>active</code>, &amp; <code>hidden</code> keys which have corresponding CSS class values, defaults to "active", &amp; "hidden"</p>
+<p><code>Object</code> with <code>current</code>, &amp; <code>hidden</code> keys which have corresponding CSS class values, defaults to "current", &amp; "hidden"</p>
 
 <h4>
 <a id="ctx" class="anchor" href="#ctx" aria-hidden="true"><span class="octicon octicon-link"></span></a>ctx</h4>
@@ -73,9 +125,19 @@ When loaded with a script tag, <code>window.router</code> will be created.</p>
 <p>Context for DOM selector, defaults to <code>body</code> if not specified</p>
 
 <h4>
+<a id="default" class="anchor" href="#default" aria-hidden="true"><span class="octicon octicon-link"></span></a>default</h4>
+
+<p>[Optional] The default route to display if one is not specified, or an invalid route is specified</p>
+
+<h4>
+<a id="delimiter" class="anchor" href="#delimiter" aria-hidden="true"><span class="octicon octicon-link"></span></a>delimiter</h4>
+
+<p>Multi-tier routing delimiter, defaults to <code>/</code>, e.g. <code>#settings/billing</code>; each tier should map to a nested <code>id</code></p>
+
+<h4>
 <a id="log" class="anchor" href="#log" aria-hidden="true"><span class="octicon octicon-link"></span></a>log</h4>
 
-<p>Logs routing to <code>router.history[]</code> if enabled, defaults to <code>false</code> (could be a memory leak if logging is enabled and target <code>Elements</code> are removed from DOM)</p>
+<p><code>Boolean</code> which logs routing to <code>router.history[]</code> if <code>true</code>, defaults to <code>false</code>; could be a memory leak if logging is enabled and target <code>Elements</code> are removed from DOM</p>
 
 <h2>
 <a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
@@ -84,6 +146,16 @@ When loaded with a script tag, <code>window.router</code> will be created.</p>
 <a id="current" class="anchor" href="#current" aria-hidden="true"><span class="octicon octicon-link"></span></a>current()</h4>
 
 <p>Returns the current <code>Route</code>, if logging is enabled</p>
+
+<h4>
+<a id="hashchangeev" class="anchor" href="#hashchangeev" aria-hidden="true"><span class="octicon octicon-link"></span></a>hashchange(ev)</h4>
+
+<p>Event handler, expects <code>{oldURL: "", newURL: ""}</code></p>
+
+<h4>
+<a id="selectquery" class="anchor" href="#selectquery" aria-hidden="true"><span class="octicon octicon-link"></span></a>select(query)</h4>
+
+<p>Context specific DOM selector</p>
 
 <h2>
 <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
