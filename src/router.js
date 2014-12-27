@@ -6,9 +6,9 @@
 function Router () {
 	this.active = true;
 	this.callback = null;
-	this.css = {active: "active", hidden: "hidden"};
+	this.css = { current: "current", hidden: "hidden" };
 	this.ctx = null;
-	this["default"] = null;
+	this[ "default" ] = null;
 	this.history = [];
 	this.log = false;
 	this.routes = [];
@@ -30,7 +30,7 @@ Router.prototype.constructor = Router;
  * @return {Object} Route descriptor
  */
 Router.prototype.current = function () {
-	return this.history[0];
+	return this.history[ 0 ];
 };
 
 /**
@@ -50,7 +50,7 @@ Router.prototype.hashchange = function ( ev ) {
 		$newEl = newHash ? this.select( "#" + newHash )[ 0 ] : null;
 		$oldItem = oldHash ? this.select( "a[href='#" + oldHash + "']" )[ 0 ] : null;
 		$newItem = newHash ? this.select( "a[href='#" + newHash + "']" )[ 0 ] : null;
-		r = route( { element: $newEl, hash: newHash } );
+		r = route( { element: $newEl, hash: newHash, trigger: $newItem } );
 
 		if ( this.stop === true ) {
 			ev.preventDefault();
@@ -59,16 +59,22 @@ Router.prototype.hashchange = function ( ev ) {
 
 		render( function () {
 			if ( $oldItem && $oldEl ) {
-				$oldItem.parentNode.classList.remove( this.css.active );
+				if ( this.css.current ) {
+					$oldItem.classList.remove( this.css.current );
+				}
+
 				$oldEl.classList.add( this.css.hidden );
 			}
 
 			if ( $newItem && $newEl ) {
-				$newItem.parentNode.classList.add( this.css.active );
+				if ( this.css.current ) {
+					$newItem.classList.add( this.css.current );
+				}
+
 				$newEl.classList.remove( this.css.hidden );
 			}
 			else if ( this[ "default" ] ) {
-				this.route( this["default"] );
+				this.route( this[ "default" ] );
 			}
 
 			if ( this.log === true ) {
@@ -117,7 +123,7 @@ function router ( arg ) {
 	r.stop = arg.stop !== undefined ? ( arg.stop === true ) : true;
 
 	if ( arg.css ) {
-		r.css = { active: "active", hidden: "hidden" };
+		r.css = { current: "current", hidden: "hidden" };
 	}
 
 	r.routes = [].slice.call( r.select( "a" ) ).filter( function ( i ) {
@@ -126,25 +132,25 @@ function router ( arg ) {
 		return i.href.replace( not_hash, "" );
 	} );
 
-	r["default"] = arg["default"] || r.routes[0];
+	r[ "default" ] = arg[ "default" ] || r.routes[ 0 ];
 
 	// Setting state
 	if ( !( r.css.hidden in r.ctx.classList ) ) {
 		if ( hash !== "" && contains( r.routes, hash ) ) {
-			t = r.select( "#" + hash )[0];
+			t = r.select( "#" + hash )[ 0 ];
 			if ( t ) {
 				t.classList.remove( r.css.hidden );
 			}
 
-			if ( r.css.active ) {
+			if ( r.css.current ) {
 				a = r.select( "a[href='#" + hash + "']" )[ 0 ];
 				if ( a ) {
-					a.classList.add( r.css.active );
+					a.classList.add( r.css.current );
 				}
 			}
 		}
 		else {
-			r.route( r["default"] );
+			r.route( r[ "default" ] );
 		}
 	}
 

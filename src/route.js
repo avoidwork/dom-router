@@ -7,6 +7,8 @@
 function Route ( arg ) {
 	this.hash = arg.hash;
 	this.element = arg.element;
+	this.trigger = arg.trigger;
+	this.timestamp = new Date().toISOString();
 }
 
 /**
