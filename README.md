@@ -37,6 +37,21 @@ Context for DOM selector, defaults to `body` if not specified
 #### delimiter
 Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each tier should map to a nested `id`
 
+```html
+<...>
+  <section id="main">
+    ...
+  </section>
+  ...
+  <section id="settings">
+    ...
+    <section id="billing">
+      ...
+    </section>
+  </section>
+</...>
+```
+
 #### log
 `Boolean` which logs routing to `router.history[]` if `true`, defaults to `false`; could be a memory leak if logging is enabled and target `Elements` are removed from DOM
 
