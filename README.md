@@ -35,7 +35,7 @@ Function to execute after route has changed, takes `arg` which describes the eve
 Context for DOM selector, defaults to `body` if not specified
 
 #### delimiter
-Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`
+Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each tier should map to a nested `id`
 
 #### log
 `Boolean` which logs routing to `router.history[]` if `true`, defaults to `false`; could be a memory leak if logging is enabled and target `Elements` are removed from DOM
