@@ -47,7 +47,7 @@ Router.prototype.hashchange = function ( ev ) {
 		newHash = contains( ev.newURL, "#" ) ? ev.newURL.replace( not_hash, "" ) : null;
 
 	if ( this.active && ( oldHash ? contains( this.routes, oldHash ) : true ) && ( newHash ? contains( this.routes, newHash ) : false ) ) {
-		if ( this.stop === true ) {
+		if ( this.stop === true && typeof ev.preventDefault == "function" ) {
 			ev.preventDefault();
 			ev.stopPropagation();
 		}
@@ -154,7 +154,7 @@ Router.prototype.sweep = function ( obj, klass ) {
 function router ( arg ) {
 	var r = new Router(),
 		hash = document.location.hash.replace( "#", "" ),
-		hashes, t;
+		t;
 
 	// Adding hook
 	window.addEventListener( "hashchange", function ( ev ) {
@@ -184,23 +184,7 @@ function router ( arg ) {
 		t = r.ctx;
 
 		if ( hash !== "" && contains( r.routes, hash ) ) {
-			hashes = hash.split( r.delimiter );
-			hashes.forEach( function ( i, idx ) {
-				var a;
-
-				t = t.querySelector( "#" + i );
-
-				if ( t ) {
-					r.sweep( t, r.css.hidden );
-				}
-
-				if ( r.css.current ) {
-					a = r.select( "a[href='#" + hashes.slice( 0, idx + 1 ).join( r.delimiter ) + "']" )[ 0 ];
-					if ( a ) {
-						a.classList.add( r.css.current );
-					}
-				}
-			} );
+			r.hashchange( {oldURL: "", newURL: document.location.hash} );
 		}
 		else {
 			r.route( r[ "default" ] );
