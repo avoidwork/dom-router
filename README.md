@@ -2,11 +2,61 @@
 
 [![build status](https://secure.travis-ci.org/avoidwork/dom-router.svg)](http://travis-ci.org/avoidwork/dom-router)
 
-DOM router which automatically, & intelligently toggles visibility of `Elements` based on `hashchange` events.
-This provides a clean separation of concerns, and progressive enhancement in a simple library. A `callback` allows
-you to handle the application state change the way you want.
+Imagine you didn't have to write a bunch of JavaScript to get a slick, progressively enhanced interface! `dom-router`
+is a URL hash to DOM router which automatically, & intelligently toggles visibility of `Elements` based on `hashchange`
+events.
+
+This provides a clean separation of concerns, and progressive enhancement in a simple library. You can write clean HTML,
+and `dom-router` will progressively enhance the interface with CSS classes (not supplied). DOM updates happen on an
+animation frame to minimize impacting your application. An optional `callback` allows you to handle application
+state changes the way you want.
 
 ## Example
+#### Before routing is enabled
+```html
+<nav>
+  <ul>
+    <li><a href="#main">Main</a></li>
+    <li><a href="#settings/billing" class="settings">Billing</a></li>
+    <li><a href="#settings/password" class="settings">Password</a></li>
+    <li><a href="#settings/avatar" class="settings">Avatar</a></li>
+  </ul>
+</nav>
+...
+<article>
+  <section id="main">...</section>
+  <section id="settings">
+    <section id="billing">...</section>
+    <section id="password">...</section>
+    <section id="avatar">...</section>
+  </section>
+</article>
+```
+
+#### After routing is enabled
+This would be the result if a user visited `#settings/billing`:
+
+```html
+<nav>
+  <ul>
+    <li><a href="#main">Main</a></li>
+    <li><a href="#settings/billing" class="settings current">Billing</a></li>
+    <li><a href="#settings/password" class="settings">Password</a></li>
+    <li><a href="#settings/avatar" class="settings">Avatar</a></li>
+  </ul>
+</nav>
+...
+<article>
+  <section id="main" class="hidden">...</section>
+  <section id="settings">
+    <section id="billing">...</section>
+    <section id="password" class="hidden">...</section>
+    <section id="avatar" class="hidden">...</section>
+  </section>
+</article>
+```
+
+#### Minimal coding required
 ```javascript
 var router = require('dom-router'),
     r;
@@ -34,19 +84,11 @@ Function to execute after route has changed, takes `arg` which describes the eve
 #### ctx
 Context for DOM selector, defaults to `body` if not specified
 
+#### default
+[Optional] The default route to display if one is not specified, or an invalid route is specified
+
 #### delimiter
 Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each tier should map to a nested `id`
-
-```html
-<article>
-  <section id="main" class="hidden">...</section>
-  <section id="settings">
-    <section id="billing">...</section>
-    <section id="password" class="hidden">...</section>
-    <section id="avatar" class="hidden">...</section>
-  </section>
-</article>
-```
 
 #### log
 `Boolean` which logs routing to `router.history[]` if `true`, defaults to `false`; could be a memory leak if logging is enabled and target `Elements` are removed from DOM
@@ -54,6 +96,12 @@ Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each ti
 ## API
 #### current()
 Returns the current `Route`, if logging is enabled
+
+#### hashchange(ev)
+Event handler, expects `{oldURL: "", newURL: ""}`
+
+#### select(query)
+Context specific DOM selector
 
 
 ## Requirements
