@@ -39,11 +39,11 @@ Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each ti
 
 ```html
 <article>
-  <section id="main">...</section>
+  <section id="main" class="hidden">...</section>
   <section id="settings">
     <section id="billing">...</section>
-    <section id="password">...</section>
-    <section id="avatar">...</section>
+    <section id="password" class="hidden">...</section>
+    <section id="avatar" class="hidden">...</section>
   </section>
 </article>
 ```
