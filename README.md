@@ -34,8 +34,11 @@ Function to execute after route has changed, takes `arg` which describes the eve
 #### ctx
 Context for DOM selector, defaults to `body` if not specified
 
+#### delimiter
+Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`
+
 #### log
-Logs routing to `router.history[]` if enabled, defaults to `false` (could be a memory leak if logging is enabled and target `Elements` are removed from DOM)
+`Boolean` which logs routing to `router.history[]` if `true`, defaults to `false`; could be a memory leak if logging is enabled and target `Elements` are removed from DOM
 
 ## API
 #### current()
