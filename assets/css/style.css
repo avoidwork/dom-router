@@ -1,0 +1,102 @@
+html,
+body {
+	min-height: 100%;
+}
+
+html {
+	margin: 0 0 0 0;
+}
+
+body {
+	max-width: 60%;
+	margin: 0 auto 0 auto;
+	font-family: 'Arimo', sans-serif;
+	font-size: 18px;
+}
+
+body > * {
+	position: relative;
+}
+
+a {
+	color: #33CCFF;
+}
+
+a:hover {
+	color: #FF3300;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-weight: bold;
+}
+
+h1,
+h2,
+h3,
+header,
+article,
+section,
+nav,
+footer {
+	margin: 0 0 1em 0;
+}
+
+p {
+	margin: 0 0 2em 0;
+}
+
+h1 {
+	margin: 1em 0 1em 0;
+	font-size: 2.6em;
+}
+
+header h1 {
+	margin-bottom: 0.4em;
+}
+
+h2 {
+	font-size: 1.6em;
+}
+
+h3 {
+	font-size: 1.2em;
+}
+
+nav {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+nav ul li {
+	display: inline-block;
+	margin: 0 0.4em 0 0.4em;
+}
+
+nav ul li:first-child {
+	margin: 0 0.4em 0 0;
+}
+
+nav ul li:last-child {
+	margin: 0 0 0 0.4em;
+}
+
+code {
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+footer {
+	margin-top: 4em;
+}
+
+.hidden {
+	display: none;
+}
+
+.current {
+	font-weight: bold;
+}

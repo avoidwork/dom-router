@@ -1,182 +1,100 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>dom-router by avoidwork</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>dom-router</h1>
-        <p>URL hash to DOM router</p>
-
-        <p class="view"><a href="https://github.com/avoidwork/dom-router">View the Project on GitHub <small>avoidwork/dom-router</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/avoidwork/dom-router/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/avoidwork/dom-router/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/avoidwork/dom-router">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <p>Imagine you didn't have to write a bunch of JavaScript to get a slick, progressively enhanced interface! <code>dom-router</code>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>dom-router: Simple &amp; powerful routing</title>
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Arimo:400,700,400italic,700italic" media="print,screen" />
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css" media="print,screen" />
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css" media="print,screen" />
+</head>
+<body>
+<header>
+	<h1>dom-router</h1>
+	<p>View the Project on GitHub <a href="https://github.com/avoidwork/dom-router" title="dom-router project on GitHub">avoidwork/dom-router</a></p>
+	<nav>
+		<ul>
+			<li><a href="#main">Main</a></li>
+			<li><a href="#example">Example</a></li>
+			<li><a href="#configuration">Configuration</a></li>
+			<li><a href="#api">API</a></li>
+		</ul>
+	</nav>
+</header>
+<article>
+	<section id="main">
+		<h1>Simple &amp; powerful routing</h1>
+		<p>Imagine you didn't have to write a bunch of JavaScript to get a slick, progressively enhanced interface! <code>dom-router</code>
 is a URL hash to DOM router which automatically, &amp; intelligently toggles visibility of <code>Elements</code> based on <code>hashchange</code>
 events.</p>
+		<p>This provides a clean separation of concerns, and progressive enhancement in a simple library. You can write clean HTML, and <code>dom-router</code> will progressively enhance the interface with CSS classes (not supplied). DOM updates happen on an animation frame to minimize impacting your application. An optional <code>callback</code> allows you to handle application state changes the way you want.</p>
 
-<p>This provides a clean separation of concerns, and progressive enhancement in a simple library. You can write clean HTML,
-and <code>dom-router</code> will progressively enhance the interface with CSS classes (not supplied). DOM updates happen on an
-animation frame to minimize impacting your application. An optional <code>callback</code> allows you to handle application
-state changes the way you want.</p>
-
-<h2>
-<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
-
-<h4>
-<a id="before-routing-is-enabled" class="anchor" href="#before-routing-is-enabled" aria-hidden="true"><span class="octicon octicon-link"></span></a>Before routing is enabled</h4>
-
-<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">nav</span>&gt;
-  &lt;<span class="pl-ent">ul</span>&gt;
-    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#main<span class="pl-pds">"</span></span>&gt;Main&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
-    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/billing<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Billing&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
-    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/password<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Password&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
-    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/avatar<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Avatar&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
-  &lt;/<span class="pl-ent">ul</span>&gt;
-&lt;/<span class="pl-ent">nav</span>&gt;
-...
-&lt;<span class="pl-ent">article</span>&gt;
-  &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>main<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
-  &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>billing<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
-    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>password<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
-    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>avatar<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
-  &lt;/<span class="pl-ent">section</span>&gt;
-&lt;/<span class="pl-ent">article</span>&gt;</pre></div>
-
-<h4>
-<a id="after-routing-is-enabled" class="anchor" href="#after-routing-is-enabled" aria-hidden="true"><span class="octicon octicon-link"></span></a>After routing is enabled</h4>
-
-<p>This would be the result if a user visited <code>#settings/billing</code>:</p>
-
-<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">nav</span>&gt;
-  &lt;<span class="pl-ent">ul</span>&gt;
-    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#main<span class="pl-pds">"</span></span>&gt;Main&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
-    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/billing<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings current<span class="pl-pds">"</span></span>&gt;Billing&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
-    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/password<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Password&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
-    &lt;<span class="pl-ent">li</span>&gt;&lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s1"><span class="pl-pds">"</span>#settings/avatar<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;Avatar&lt;/<span class="pl-ent">a</span>&gt;&lt;/<span class="pl-ent">li</span>&gt;
-  &lt;/<span class="pl-ent">ul</span>&gt;
-&lt;/<span class="pl-ent">nav</span>&gt;
-...
-&lt;<span class="pl-ent">article</span>&gt;
-  &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>main<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
-  &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>settings<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>billing<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
-    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>password<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
-    &lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s1"><span class="pl-pds">"</span>avatar<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s1"><span class="pl-pds">"</span>hidden<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">section</span>&gt;
-  &lt;/<span class="pl-ent">section</span>&gt;
-&lt;/<span class="pl-ent">article</span>&gt;</pre></div>
-
-<h4>
-<a id="minimal-coding-required" class="anchor" href="#minimal-coding-required" aria-hidden="true"><span class="octicon octicon-link"></span></a>Minimal coding required</h4>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> router <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>dom-router<span class="pl-pds">'</span></span>),
-    r;
-
-<span class="pl-c">// Router will write to console on `hashchange`</span>
-r <span class="pl-k">=</span> router({<span class="pl-en">callback</span>: <span class="pl-st">function</span> (<span class="pl-vpf">arg</span>) {
-    <span class="pl-en">console</span><span class="pl-s3">.log</span>(arg.element.<span class="pl-sc">id</span>, <span class="pl-s1"><span class="pl-pds">"</span>is visible<span class="pl-pds">"</span></span>);
-}});</pre></div>
-
-<h2>
-<a id="how-can-i-load-dom-router" class="anchor" href="#how-can-i-load-dom-router" aria-hidden="true"><span class="octicon octicon-link"></span></a>How can I load dom-router?</h2>
-
-<p>dom-router can be installed from npm, &amp; bower, and supports CJS, AMD, &amp; script tags.
+		<h2>How can I load dom-router?</h2>
+		<p>dom-router can be installed from npm, &amp; bower, and supports CJS, AMD, &amp; script tags.
 When loaded with a script tag, <code>window.router</code> will be created.</p>
 
-<h2>
-<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h2>
+		<h2>Requirements</h2>
+		<ul>
+			<li><code>Element.classList</code> API, or shim</li>
+		</ul>
+	</section>
+	<section id="example">
+		<h1>Example</h1>
+		<p>This example is meant to demonstrate multi-tier routing in a single page application. When the HTML is "clean", it is functional for screen readers &amp; text based browsers like `lynx`, and with progressive enhancement, developers can add new behaviour without impacting the experience of other consumers.</p>
 
-<h4>
-<a id="active" class="anchor" href="#active" aria-hidden="true"><span class="octicon octicon-link"></span></a>active</h4>
+		<h3>Before routing is enabled</h3>
+		<script src="https://gist.github.com/avoidwork/609529d9a836510d8173.js"></script>
 
-<p><code>Boolean</code> which enables/disables routing</p>
+		<h3>After routing is enabled</h3>
+		<script src="https://gist.github.com/avoidwork/e77ba35cafddd25f9ded.js"></script>
 
-<h4>
-<a id="callback" class="anchor" href="#callback" aria-hidden="true"><span class="octicon octicon-link"></span></a>callback</h4>
+		<h3>Minimal coding required</h3>
+		<script src="https://gist.github.com/avoidwork/6a119b680f6609513936.js"></script>
+	</section>
+	<section id="configuration">
+		<h1>Configuration</h1>
+		<h4>active</h4>
+		<p><code>Boolean</code> which enables/disables routing</p>
 
-<p>Function to execute after route has changed, takes <code>arg</code> which describes the event</p>
+		<h4>callback</h4>
+		<p>Function to execute after route has changed, takes <code>arg</code> which describes the event.</p>
 
-<h4>
-<a id="css" class="anchor" href="#css" aria-hidden="true"><span class="octicon octicon-link"></span></a>css</h4>
+		<h4>css</h4>
+		<p><code>Object</code> with <code>current</code>, &amp; <code>hidden</code> keys which have corresponding CSS class values, defaults to "current", &amp; "hidden".</p>
 
-<p><code>Object</code> with <code>current</code>, &amp; <code>hidden</code> keys which have corresponding CSS class values, defaults to "current", &amp; "hidden"</p>
+		<h4>ctx</h4>
+		<p>Context for DOM selector, defaults to <code>body</code> if not specified.</p>
+		<p>This allows for many routers to be dynamically created &amp; scoped to a "view", but it can get pretty complex pretty fast, so a single router is recommended.</p>
 
-<h4>
-<a id="ctx" class="anchor" href="#ctx" aria-hidden="true"><span class="octicon octicon-link"></span></a>ctx</h4>
+		<h4>default</h4>
+		<p>[Optional] Default route to display if one is not specified, or an invalid route is specified.</p>
 
-<p>Context for DOM selector, defaults to <code>body</code> if not specified</p>
+		<h4>delimiter</h4>
+		<p>[Optional] Multi-tier routing delimiter, defaults to <code>/</code>, e.g. <code>#settings/billing</code>; each tier should map to a nested <code>id</code>.</p>
 
-<h4>
-<a id="default" class="anchor" href="#default" aria-hidden="true"><span class="octicon octicon-link"></span></a>default</h4>
+		<h4>log</h4>
+		<p><code>Boolean</code> which logs routing to <code>router.history[]</code> if <code>true</code>, defaults to <code>false</code>; could be a memory leak if logging is enabled and target <code>Elements</code> are removed from DOM.</p>
+	</section>
+	<section id="api">
+		<h1>API</h1>
 
-<p>[Optional] The default route to display if one is not specified, or an invalid route is specified</p>
+		<h4>current()</h4>
+		<p>Returns the current <code>Route</code>, if logging is enabled.</p>
 
-<h4>
-<a id="delimiter" class="anchor" href="#delimiter" aria-hidden="true"><span class="octicon octicon-link"></span></a>delimiter</h4>
+		<h4>hashchange(ev)</h4>
+		<p>Event handler, expects <code>{oldURL: "", newURL: ""}</code>.</p>
 
-<p>Multi-tier routing delimiter, defaults to <code>/</code>, e.g. <code>#settings/billing</code>; each tier should map to a nested <code>id</code></p>
-
-<h4>
-<a id="log" class="anchor" href="#log" aria-hidden="true"><span class="octicon octicon-link"></span></a>log</h4>
-
-<p><code>Boolean</code> which logs routing to <code>router.history[]</code> if <code>true</code>, defaults to <code>false</code>; could be a memory leak if logging is enabled and target <code>Elements</code> are removed from DOM</p>
-
-<h2>
-<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
-
-<h4>
-<a id="current" class="anchor" href="#current" aria-hidden="true"><span class="octicon octicon-link"></span></a>current()</h4>
-
-<p>Returns the current <code>Route</code>, if logging is enabled</p>
-
-<h4>
-<a id="hashchangeev" class="anchor" href="#hashchangeev" aria-hidden="true"><span class="octicon octicon-link"></span></a>hashchange(ev)</h4>
-
-<p>Event handler, expects <code>{oldURL: "", newURL: ""}</code></p>
-
-<h4>
-<a id="selectquery" class="anchor" href="#selectquery" aria-hidden="true"><span class="octicon octicon-link"></span></a>select(query)</h4>
-
-<p>Context specific DOM selector</p>
-
-<h2>
-<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
-
-<ul>
-<li>
-<code>Element.classList</code> API, or shim</li>
-</ul>
-
-<h2>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
-
-<p>Copyright (c) 2014 Jason Mulligan
-Licensed under the BSD-3 license</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/avoidwork">Jason Mulligan</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+		<h4>select(query)</h4>
+		<p>Context specific DOM selector.</p>
+	</section>
+</article>
+<footer>
+	<p>Copyright &copy; 2014 <a href="http://avoidwork.com" title="Jason Mulligan's website">Jason Mulligan</a><br />
+		Licensed under the BSD-3 license</p>
+</footer>
+</body>
+<script type="application/javascript" src="assets/js/dom-router.min.js"></script>
+<script type="application/javascript">
+r = router({callback: function (arg) {
+	console.log(arg.element.id, "is visible");
+}});
+</script>
 </html>
