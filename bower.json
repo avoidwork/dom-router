@@ -5,7 +5,7 @@
   "authors": [
     "Jason Mulligan <jason.mulligan@avoidwork.com>"
   ],
-  "description": "Tiny graph data structure for Client or Server",
+  "description": "URL hash to DOM router",
   "main": "lib/dom-router.min.js",
   "moduleType": [
     "amd",
@@ -13,18 +13,19 @@
     "node"
   ],
   "keywords": [
-    "proxy",
-    "Object"
+    "DOM",
+    "router",
+    "URL",
+    "hash",
+    "progressive",
+    "enhancement"
   ],
   "license": "BSD-3",
   "ignore": [
     "**/.*",
-    "doc",
     "node_modules",
     "bower_components",
     "src",
-    "test",
-    "tests",
-    "docstrap.json"
+    "test"
   ]
 }

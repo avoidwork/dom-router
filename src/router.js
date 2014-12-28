@@ -133,6 +133,25 @@ Router.prototype.route = function ( arg ) {
 };
 
 /**
+ * Scans the DOM for routes
+ *
+ * @method scan
+ * @param  {String} arg Default route
+ * @return {Object}     Router
+ */
+Router.prototype.scan = function ( arg ) {
+	this.routes = this.select( "a" ).filter( function ( i ) {
+		return contains( i.href, "#" );
+	} ).map( function ( i ) {
+		return i.href.replace( not_hash, "" );
+	} );
+
+	this[ "default" ] = arg || this.routes[ 0 ];
+
+	return this;
+};
+
+/**
  * Sweeps the surrounding nodes and toggles a class
  *
  * @method sweep
@@ -178,12 +197,9 @@ function router ( arg ) {
 		return [].slice.call( r.ctx.querySelectorAll.call( r.ctx, arg ) );
 	};
 	r.stop = arg.stop !== undefined ? ( arg.stop === true ) : true;
-	r.routes = r.select( "a" ).filter( function ( i ) {
-		return contains( i.href, "#" );
-	} ).map( function ( i ) {
-		return i.href.replace( not_hash, "" );
-	} );
-	r[ "default" ] = arg[ "default" ] || r.routes[ 0 ];
+	
+	// Scanning for routes
+	r.scan( arg[ "default" ] );
 
 	// Setting state
 	if ( !( r.css.hidden in r.ctx.classList ) ) {

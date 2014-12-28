@@ -84,12 +84,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-mocha-test");
-	grunt.loadNpmTasks("grunt-nsp-package");
 
 	// aliases
 	grunt.registerTask("test", ["jshint", "mochaTest"]);
 	grunt.registerTask("build", ["concat", "copy", "test"]);
 	grunt.registerTask("default", ["build", "uglify"]);
-	grunt.registerTask("validate", "validate-package");
-	grunt.registerTask("package", ["validate", "default"]);
 };

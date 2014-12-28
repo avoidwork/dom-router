@@ -12,6 +12,10 @@ animation frame to minimize impacting your application. An optional `callback` a
 state changes the way you want.
 
 ## Example
+This example is meant to demonstrate multi-tier routing in a single page application. When the HTML is "clean", it is
+functional for screen readers & text based browsers like `lynx`, and with progressive enhancement, developers can add
+new behaviour without impacting the experience of other consumers.
+
 #### Before routing is enabled
 ```html
 <nav>
@@ -99,6 +103,9 @@ Returns the current `Route`, if logging is enabled
 
 #### hashchange(ev)
 Event handler, expects `{oldURL: "", newURL: ""}`
+
+#### scan(default)
+Scans `ctx` for routes & resets `default` which is an optional argument, otherwise it defaults to the first route
 
 #### select(query)
 Context specific DOM selector
