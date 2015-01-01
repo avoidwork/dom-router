@@ -250,10 +250,17 @@ function router ( arg ) {
 	var r = new Router(),
 		hash = document.location.hash.replace( "#", "" );
 
-	// Adding hook
-	window.addEventListener( "hashchange", function ( ev ) {
+	function facade ( ev ) {
 		r.hashchange.call( r, ev );
-	}, false );
+	}
+
+	// Adding hook
+	if ( "addEventListener" in window ) {
+		window.addEventListener( "hashchange", facade, false );
+	}
+	else {
+		window.onhashchange = facade;
+	}
 
 	// Setting properties
 	if ( arg instanceof Object ) {
@@ -262,8 +269,8 @@ function router ( arg ) {
 		r.css = arg.css || r.css;
 		r.ctx = arg.ctx && typeof arg.ctx.querySelectorAll == "function" ? arg.ctx : r.ctx;
 		r.delimiter = arg.delimiter || r.delimiter;
-		r.log = arg.log !== undefined ? ( arg.log === true ) : false;
-		r.stop = arg.stop !== undefined ? ( arg.stop === true ) : true;
+		r.log = arg.log !== undefined ? ( arg.log === true ) : r.log;
+		r.stop = arg.stop !== undefined ? ( arg.stop === true ) : r.stop;
 	}
 
 	// Scanning for routes
