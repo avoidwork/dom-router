@@ -1,7 +1,7 @@
 {
   "name": "dom-router",
   "description": "URL hash to DOM router",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "http://avoidwork.github.io/dom-router",
   "author": {
     "name": "Jason Mulligan",

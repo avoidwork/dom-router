@@ -21,12 +21,9 @@
 	"loopfunc": true,
 	"evil": true,
 	"globals": {
-		"Document": true,
 		"require": true,
 		"console": true,
-		"process": true,
 		"module": true,
-		"define": true,
-		"CustomEvent": true
+		"define": true
 	}
 }

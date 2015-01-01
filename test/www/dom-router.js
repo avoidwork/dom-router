@@ -6,7 +6,7 @@
  * @license BSD-3 <https://raw.github.com/avoidwork/dom-router/master/LICENSE>
  * @link http://avoidwork.github.io/dom-router
  * @module dom-router
- * @version 1.0.1
+ * @version 1.0.2
  */
 ( function ( document, window ) {
 "use strict";
@@ -67,14 +67,13 @@ function route ( arg ) {
 function Router () {
 	this.active = true;
 	this.callback = null;
-	this.css = null;
-	this.ctx = null;
+	this.css = { current: "current", hidden: "hidden" };
+	this.ctx = document.body;
 	this[ "default" ] = null;
-	this.delimiter = null;
+	this.delimiter = "/";
 	this.history = [];
 	this.log = false;
 	this.routes = [];
-	this.select = null;
 	this.stop = true;
 }
 
@@ -194,6 +193,17 @@ Router.prototype.route = function ( arg ) {
 };
 
 /**
+ * Makes a context specific DOM query
+ *
+ * @method select
+ * @param  {String} arg CSS selector
+ * @return {Array}      Array of matching nodes
+ */
+Router.prototype.select = function ( arg ) {
+	return [].slice.call( this.ctx.querySelectorAll.call( this.ctx, arg ) );
+};
+
+/**
  * Scans the DOM for routes
  *
  * @method scan
@@ -208,7 +218,6 @@ Router.prototype.scan = function ( arg ) {
 	} );
 
 	this[ "default" ] = arg || this.routes[ 0 ];
-
 	return this;
 };
 
@@ -228,7 +237,6 @@ Router.prototype.sweep = function ( obj, klass ) {
 	}, this );
 
 	obj.classList.remove( klass );
-
 	return this;
 };
 
@@ -248,19 +256,18 @@ function router ( arg ) {
 	}, false );
 
 	// Setting properties
-	r.active = arg.active !== undefined ? ( arg.active === true ) : true;
-	r.callback = arg.callback || null;
-	r.css = arg.css || { current: "current", hidden: "hidden" };
-	r.ctx = arg.ctx && typeof arg.ctx.querySelectorAll == "function" ? arg.ctx : document.body;
-	r.delimiter = arg.delimiter || "/";
-	r.log = arg.log !== undefined ? ( arg.log === true ) : false;
-	r.select = function ( arg ) {
-		return [].slice.call( r.ctx.querySelectorAll.call( r.ctx, arg ) );
-	};
-	r.stop = arg.stop !== undefined ? ( arg.stop === true ) : true;
-	
+	if ( arg instanceof Object ) {
+		r.active = arg.active !== undefined ? ( arg.active === true ) : r.active;
+		r.callback = arg.callback || r.callback;
+		r.css = arg.css || r.css;
+		r.ctx = arg.ctx && typeof arg.ctx.querySelectorAll == "function" ? arg.ctx : r.ctx;
+		r.delimiter = arg.delimiter || r.delimiter;
+		r.log = arg.log !== undefined ? ( arg.log === true ) : false;
+		r.stop = arg.stop !== undefined ? ( arg.stop === true ) : true;
+	}
+
 	// Scanning for routes
-	r.scan( arg[ "default" ] );
+	r.scan( r[ "default" ] );
 
 	// Setting state
 	if ( !( r.css.hidden in r.ctx.classList ) ) {
