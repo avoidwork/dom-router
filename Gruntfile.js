@@ -17,13 +17,21 @@ module.exports = function (grunt) {
 			dist : {
 				src : [
 					"src/intro.js",
-					"src/contains.js",
-					"src/hashchange.js",
 					"src/route.js",
 					"src/router.js",
 					"src/outro.js"
 				],
-				dest : "lib/<%= pkg.name %>.js"
+				dest : "lib/<%= pkg.name %>.es6.js"
+			}
+		},
+		"6to5": {
+			options: {
+				sourceMap: false
+			},
+			dist: {
+				files: {
+					"lib/<%= pkg.name %>.js": "lib/<%= pkg.name %>.es6.js"
+				}
 			}
 		},
 		copy: {
@@ -32,12 +40,6 @@ module.exports = function (grunt) {
 					{expand: true, flatten: true, src: ["lib/<%= pkg.name %>.js"], dest: "test/www"}
 				]
 			}
-		},
-		jshint : {
-			options : {
-				jshintrc : ".jshintrc"
-			},
-			src : "lib/<%= pkg.name %>.js"
 		},
 		mochaTest : {
 			options: {
@@ -80,13 +82,13 @@ module.exports = function (grunt) {
 	// tasks
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-copy");
-	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-mocha-test");
+	grunt.loadNpmTasks("grunt-6to5");
 
 	// aliases
-	grunt.registerTask("test", ["jshint", "mochaTest"]);
-	grunt.registerTask("build", ["concat", "copy", "test"]);
+	grunt.registerTask("test", ["mochaTest"]);
+	grunt.registerTask("build", ["concat", "6to5", "copy", "test"]);
 	grunt.registerTask("default", ["build", "uglify"]);
 };

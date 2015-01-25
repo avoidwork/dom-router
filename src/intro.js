@@ -1,14 +1,19 @@
-( function ( document, window ) {
-"use strict";
+Array.from = Array.from || ( arg ) => {
+	return [].slice.call( arg );
+};
 
-var not_hash = /.*\#/,
-	time = new Date().getTime(),
-	render;
+( document, window ) => {
+let not_hash = /.*\#/;
+let time = new Date().getTime();
 
-render = window.requestAnimationFrame || function ( fn ) {
-	var offset = new Date().getTime() - time;
+let contains = ( obj, arg ) => {
+	return obj.indexOf( arg ) > -1;
+};
 
-	setTimeout( function () {
+let render = window.requestAnimationFrame || ( fn ) => {
+	let offset = new Date().getTime() - time;
+
+	setTimeout( () => {
 		fn( offset );
 	}, 16 );
 };

@@ -73,7 +73,7 @@ r = router({callback: function (arg) {
 
 ## How can I load dom-router?
 dom-router can be installed from npm, & bower, and supports CJS, AMD, & script tags.
-When loaded with a script tag, `window.router` will be created.
+When loaded with a script tag, `window.router` will be created. An ES6 version is included in `/lib`.
 
 ## Configuration
 #### active
@@ -94,7 +94,7 @@ Context for DOM selector, defaults to `body` if not specified
 #### delimiter
 Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each tier should map to a nested `id`
 
-#### log
+#### logging
 `Boolean` which logs routing to `router.history[]` if `true`, defaults to `false`; could be a memory leak if logging is enabled and target `Elements` are removed from DOM
 
 ## API

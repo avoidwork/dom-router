@@ -3,11 +3,11 @@ if ( typeof exports != "undefined" ) {
 	module.exports = router;
 }
 else if ( typeof define == "function" ) {
-	define( function () {
+	define( () => {
 		return router;
 	} );
 }
 else {
 	window.router = router;
 }
-} )( document, window );
+}( document, window );

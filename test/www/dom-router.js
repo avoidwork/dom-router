@@ -1,304 +1,258 @@
+"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) {
+  if (staticProps) Object.defineProperties(child, staticProps);
+  if (instanceProps) Object.defineProperties(child.prototype, instanceProps);
+};
+
 /**
  * URL hash to DOM router
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @copyright 2014 Jason Mulligan
+ * @copyright 2015 Jason Mulligan
  * @license BSD-3 <https://raw.github.com/avoidwork/dom-router/master/LICENSE>
  * @link http://avoidwork.github.io/dom-router
  * @module dom-router
- * @version 1.0.2
+ * @version 1.1.0
  */
-( function ( document, window ) {
-"use strict";
-
-var not_hash = /.*\#/,
-	time = new Date().getTime(),
-	render;
-
-render = window.requestAnimationFrame || function ( fn ) {
-	var offset = new Date().getTime() - time;
-
-	setTimeout( function () {
-		fn( offset );
-	}, 16 );
+Array.from = Array.from || function (arg) {
+  return [].slice.call(arg);
 };
 
-/**
- * Determines if `arg` is in `obj`
- *
- * @method contains
- * @param  {Mixed} obj Object to inspect
- * @param  {Mixed} arg Value to find
- * @return {Boolean}   `true` if found
- */
-function contains ( obj, arg ) {
-	return obj.indexOf( arg ) > -1;
-}
+(function (document, window) {
+  var not_hash = /.*\#/;
+  var time = new Date().getTime();
 
-/**
- * Route
- *
- * @param {Object} arg Descriptor
- * @constructor
- */
-function Route ( arg ) {
-	this.hash = arg.hash;
-	this.element = arg.element;
-	this.trigger = arg.trigger;
-	this.timestamp = new Date().toISOString();
-}
+  var contains = function (obj, arg) {
+    return obj.indexOf(arg) > -1;
+  };
 
-/**
- * Route factory
- *
- * @method route
- * @param  {Object} arg Descriptor
- * @return {Object}     Route
- */
-function route ( arg ) {
-	return new Route( arg );
-}
+  var render = window.requestAnimationFrame || function (fn) {
+    var offset = new Date().getTime() - time;
 
-/**
- * URL hash to DOM router
- *
- * @constructor
- */
-function Router () {
-	this.active = true;
-	this.callback = null;
-	this.css = { current: "current", hidden: "hidden" };
-	this.ctx = document.body;
-	this[ "default" ] = null;
-	this.delimiter = "/";
-	this.history = [];
-	this.log = false;
-	this.routes = [];
-	this.stop = true;
-}
+    setTimeout(function () {
+      fn(offset);
+    }, 16);
+  };
 
-/**
- * Setting constructor loop
- *
- * @type {Object}
- */
-Router.prototype.constructor = Router;
+  var Route = function Route(options) {
+    this.hash = options.hash;
+    this.element = options.element;
+    this.trigger = options.trigger;
+    this.timestamp = new Date().toISOString();
+  };
 
-/**
- * Returns the current route descriptor
- *
- * @method current
- * @return {Object} Route descriptor
- */
-Router.prototype.current = function () {
-	return this.history[ 0 ];
-};
+  var route = function (arg) {
+    return new Route(arg);
+  };
 
-/**
- * Hash change handler
- *
- * @method hashchange
- * @param  {Object} Event
- * @return {Undefined} undefined
- */
-Router.prototype.hashchange = function ( ev ) {
-	var self = this,
-		oldHash = contains( ev.oldURL, "#" ) ? ev.oldURL.replace( not_hash, "" ) : null,
-		newHash = contains( ev.newURL, "#" ) ? ev.newURL.replace( not_hash, "" ) : null;
+  var Router = (function () {
+    function Router() {
+      this.active = true;
+      this.callback = function () {};
+      this.css = { current: "current", hidden: "hidden" };
+      this.ctx = document.body;
+      this["default"] = null;
+      this.delimiter = "/";
+      this.history = [];
+      this.logging = false;
+      this.routes = [];
+      this.stop = true;
+    }
 
-	if ( this.active ) {
-		if ( this.stop === true && typeof ev.preventDefault == "function" ) {
-			ev.preventDefault();
-			ev.stopPropagation();
-		}
+    _prototypeProperties(Router, null, {
+      current: {
+        value: function current() {
+          return this.history[0];
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      hashchange: {
+        value: function hashchange(ev) {
+          var _this = this;
+          var self = this;
+          var oldHash = contains(ev.oldURL, "#") ? ev.oldURL.replace(not_hash, "") : null;
+          var newHash = contains(ev.newURL, "#") ? ev.newURL.replace(not_hash, "") : null;
 
-		// Invalid route, looking for a suitable alternative with a fallback to 'default'
-		if ( !contains( this.routes, newHash ) ) {
-			return this.route( this.routes.filter( function ( i ) {
-				return contains(i, newHash );
-			} )[0] || this["default"] );
-		}
+          if (this.active) {
+            if (this.stop === true && typeof ev.preventDefault == "function") {
+              ev.preventDefault();
+              ev.stopPropagation();
+            }
 
-		render( function () {
-			var oldHashes = oldHash ? oldHash.split( self.delimiter ) : [],
-				newHashes = newHash.split( self.delimiter ),
-				r, newEl, newTrigger;
+            if (!contains(this.routes, newHash)) {
+              return this.route(this.routes.filter(function (i) {
+                return contains(i, newHash);
+              })[0] || this["default"]);
+            }
 
-			newHashes.forEach( function ( i, idx ) {
-				var nth = idx + 1,
-					valid = oldHashes.length >= nth,
-					oldEl = valid ? self.select( "#" + oldHashes.slice( 0, nth ).join( " > #" ) )[ 0 ] : null,
-					oldTrigger = valid ? self.select( "a[href='#" + oldHashes.slice( 0, nth ).join( self.delimiter ) + "']" )[ 0 ] : null;
+            render(function () {
+              var oldHashes = oldHash ? oldHash.split(self.delimiter) : [];
+              var newHashes = newHash.split(self.delimiter);
+              var newEl = undefined,
+                  newTrigger = undefined;
 
-				newEl = self.select( "#" + newHashes.slice( 0, nth ).join( " > #" ) )[ 0 ];
-				newTrigger = self.select( "a[href='#" + newHashes.slice( 0, nth ).join( self.delimiter ) + "']" )[ 0 ];
+              newHashes.forEach(function (i, idx) {
+                var nth = idx + 1;
+                var valid = oldHashes.length >= nth;
+                var oldEl = valid ? self.select("#" + oldHashes.slice(0, nth).join(" > #"))[0] : null;
+                var oldTrigger = valid ? self.select("a[href='#" + oldHashes.slice(0, nth).join(self.delimiter) + "']")[0] : null;
 
-				self.load( oldTrigger || null, oldEl || null, newTrigger || null, newEl || null );
-			}, this );
+                newEl = self.select("#" + newHashes.slice(0, nth).join(" > #"))[0];
+                newTrigger = self.select("a[href='#" + newHashes.slice(0, nth).join(self.delimiter) + "']")[0];
 
-			if ( self.css.current && self.history.length > 0 ) {
-				self.history[ 0 ].trigger.classList.remove( self.css.current );
-			}
+                self.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
+              }, _this);
 
-			r = route( { element: newEl || null, hash: newHash, trigger: newTrigger || null } );
+              if (self.css.current && self.history.length > 0) {
+                self.history[0].trigger.classList.remove(self.css.current);
+              }
 
-			if ( self.log === true ) {
-				self.history.unshift( r );
-			}
+              var r = route({ element: newEl || null, hash: newHash, trigger: newTrigger || null });
+              self.log(r);
+              self.callback(r);
+            });
+          }
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      load: {
+        value: function load(oldTrigger, oldEl, newTrigger, newEl) {
+          if (oldTrigger && this.css.current) {
+            oldTrigger.classList.remove(this.css.current);
+          }
 
-			if ( self.callback !== null ) {
-				self.callback( r );
-			}
-		} );
-	}
-};
+          if (oldEl && oldEl.id !== newEl.id) {
+            oldEl.classList.add(this.css.hidden);
+          }
 
-/**
- * Loads a route
- *
- * @method load
- * @param  {Object} arg Route descriptor
- * @return {Object}     Router
- */
-Router.prototype.load = function ( oldTrigger, oldEl, newTrigger, newEl ) {
-	if ( oldTrigger && this.css.current ) {
-		oldTrigger.classList.remove( this.css.current );
-	}
+          if (newTrigger && this.css.current) {
+            newTrigger.classList.add(this.css.current);
+          }
 
-	if ( oldEl && oldEl.id !== newEl.id ) {
-		oldEl.classList.add( this.css.hidden );
-	}
+          if (newEl) {
+            this.sweep(newEl, this.css.hidden);
+          }
 
-	if ( newTrigger && this.css.current ) {
-		newTrigger.classList.add( this.css.current );
-	}
+          return this;
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      log: {
+        value: function log(arg) {
+          if (this.logging) {
+            this.history.unshift(arg);
+          }
 
-	if ( newEl ) {
-		this.sweep( newEl, this.css.hidden );
-	}
+          return this;
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      route: {
+        value: function route(arg) {
+          document.location.hash = arg;
+          return this;
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      select: {
+        value: function select(arg) {
+          return Array.from(this.ctx.querySelectorAll.call(this.ctx, arg));
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      scan: {
+        value: function scan(arg) {
+          this.routes = this.select("a").filter(function (i) {
+            return contains(i.href, "#");
+          }).map(function (i) {
+            return i.href.replace(not_hash, "");
+          });
 
-	return this;
-};
+          this["default"] = arg || this.routes[0];
+          return this;
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      },
+      sweep: {
+        value: function sweep(obj, klass) {
+          Array.from(obj.parentNode.childNodes).filter(function (i) {
+            return i.nodeType === 1 && i.id && i.id !== obj.id;
+          }).forEach(function (i) {
+            i.classList.add(klass);
+          }, this);
 
-/**
- * Sets the route
- *
- * @method route
- * @param  {String} arg Route to set
- * @return {Object}     Router
- */
-Router.prototype.route = function ( arg ) {
-	document.location.hash = arg;
-	return this;
-};
+          obj.classList.remove(klass);
+          return this;
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true
+      }
+    });
 
-/**
- * Makes a context specific DOM query
- *
- * @method select
- * @param  {String} arg CSS selector
- * @return {Array}      Array of matching nodes
- */
-Router.prototype.select = function ( arg ) {
-	return [].slice.call( this.ctx.querySelectorAll.call( this.ctx, arg ) );
-};
+    return Router;
+  })();
 
-/**
- * Scans the DOM for routes
- *
- * @method scan
- * @param  {String} arg Default route
- * @return {Object}     Router
- */
-Router.prototype.scan = function ( arg ) {
-	this.routes = this.select( "a" ).filter( function ( i ) {
-		return contains( i.href, "#" );
-	} ).map( function ( i ) {
-		return i.href.replace( not_hash, "" );
-	} );
+  var router = function (arg) {
+    var r = new Router(),
+        hash = document.location.hash.replace("#", "");
 
-	this[ "default" ] = arg || this.routes[ 0 ];
-	return this;
-};
+    var facade = function (ev) {
+      r.hashchange.call(r, ev);
+    };
 
-/**
- * Sweeps the surrounding nodes and toggles a class
- *
- * @method sweep
- * @param  {Object} obj
- * @param  {String} klass
- * @return {Object} Router
- */
-Router.prototype.sweep = function ( obj, klass ) {
-	[].slice.call( obj.parentNode.childNodes ).filter( function ( i ) {
-		return i.nodeType === 1 && i.id && i.id !== obj.id;
-	} ).forEach( function ( i ) {
-		i.classList.add( klass );
-	}, this );
+    if ("addEventListener" in window) {
+      window.addEventListener("hashchange", facade, false);
+    } else {
+      window.onhashchange = facade;
+    }
 
-	obj.classList.remove( klass );
-	return this;
-};
+    if (arg instanceof Object) {
+      r.active = arg.active !== undefined ? arg.active === true : r.active;
+      r.callback = arg.callback || r.callback;
+      r.css = arg.css || r.css;
+      r.ctx = arg.ctx && typeof arg.ctx.querySelectorAll == "function" ? arg.ctx : r.ctx;
+      r.delimiter = arg.delimiter || r.delimiter;
+      r.logging = arg.logging !== undefined ? arg.logging === true : r.logging;
+      r.stop = arg.stop !== undefined ? arg.stop === true : r.stop;
+    }
 
-/**
- * Router factory
- *
- * @param  {Object} arg Descriptor
- * @return {Object} Router
- */
-function router ( arg ) {
-	var r = new Router(),
-		hash = document.location.hash.replace( "#", "" );
+    r.scan(r["default"]);
 
-	function facade ( ev ) {
-		r.hashchange.call( r, ev );
-	}
+    if (!(r.css.hidden in r.ctx.classList)) {
+      if (hash !== "" && contains(r.routes, hash)) {
+        r.hashchange({ oldURL: "", newURL: document.location.hash });
+      } else {
+        r.route(r["default"]);
+      }
+    }
 
-	// Adding hook
-	if ( "addEventListener" in window ) {
-		window.addEventListener( "hashchange", facade, false );
-	}
-	else {
-		window.onhashchange = facade;
-	}
+    return r;
+  };
 
-	// Setting properties
-	if ( arg instanceof Object ) {
-		r.active = arg.active !== undefined ? ( arg.active === true ) : r.active;
-		r.callback = arg.callback || r.callback;
-		r.css = arg.css || r.css;
-		r.ctx = arg.ctx && typeof arg.ctx.querySelectorAll == "function" ? arg.ctx : r.ctx;
-		r.delimiter = arg.delimiter || r.delimiter;
-		r.log = arg.log !== undefined ? ( arg.log === true ) : r.log;
-		r.stop = arg.stop !== undefined ? ( arg.stop === true ) : r.stop;
-	}
-
-	// Scanning for routes
-	r.scan( r[ "default" ] );
-
-	// Setting state
-	if ( !( r.css.hidden in r.ctx.classList ) ) {
-		if ( hash !== "" && contains( r.routes, hash ) ) {
-			r.hashchange( {oldURL: "", newURL: document.location.hash} );
-		}
-		else {
-			r.route( r[ "default" ] );
-		}
-	}
-
-	return r;
-}
-
-// CJS, AMD & window supported
-if ( typeof exports != "undefined" ) {
-	module.exports = router;
-}
-else if ( typeof define == "function" ) {
-	define( function () {
-		return router;
-	} );
-}
-else {
-	window.router = router;
-}
-} )( document, window );
+  // CJS, AMD & window supported
+  if (typeof exports != "undefined") {
+    module.exports = router;
+  } else if (typeof define == "function") {
+    define(function () {
+      return router;
+    });
+  } else {
+    window.router = router;
+  }
+})(document, window);
