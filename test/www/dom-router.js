@@ -13,7 +13,7 @@ var _prototypeProperties = function (child, staticProps, instanceProps) {
  * @license BSD-3 <https://raw.github.com/avoidwork/dom-router/master/LICENSE>
  * @link http://avoidwork.github.io/dom-router
  * @module dom-router
- * @version 1.1.0
+ * @version 1.1.1
  */
 Array.from = Array.from || function (arg) {
   return [].slice.call(arg);
@@ -209,8 +209,8 @@ Array.from = Array.from || function (arg) {
   })();
 
   var router = function (arg) {
-    var r = new Router(),
-        hash = document.location.hash.replace("#", "");
+    var r = new Router();
+    var hash = document.location.hash.replace("#", "");
 
     var facade = function (ev) {
       r.hashchange.call(r, ev);

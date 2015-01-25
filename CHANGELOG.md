@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.1.1
+- Minor correction in `router()`
+
 ## 1.1.0
 - Changed `this.callback` to be a `Function`, & removed a conditional statement within the render frame
 - Fixed collision of `log` property & `log()` method by renaming the property to `logging`

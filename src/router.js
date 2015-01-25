@@ -122,8 +122,8 @@ class Router {
 }
 
 let router = ( arg ) => {
-	let r = new Router(),
-		hash = document.location.hash.replace( "#", "" );
+	let r = new Router();
+	let hash = document.location.hash.replace( "#", "" );
 
 	let facade = ( ev ) => {
 		r.hashchange.call( r, ev );
