@@ -51,7 +51,7 @@
 						}, this);
 
 						if (self.css.current && self.history.length > 0) {
-							self.history[0].triggeobj.classList.remove(self.css.current);
+							self.history[0].trigger.classList.remove(self.css.current);
 						}
 
 						let r = new Route({element: newEl || null, hash: newHash, trigger: newTrigger || null});
