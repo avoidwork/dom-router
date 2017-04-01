@@ -1,32 +1,31 @@
 module.exports = function (grunt) {
 	grunt.initConfig({
-		pkg : grunt.file.readJSON("package.json"),
-		concat : {
-			options : {
-				banner : "/**\n" +
-				         " * <%= pkg.description %>\n" +
-				         " *\n" +
-				         " * @author <%= pkg.author.name %> <<%= pkg.author.email %>>\n" +
-				         " * @copyright <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>\n" +
-				         " * @license <%= pkg.licenses[0].type %> <<%= pkg.licenses[0].url %>>\n" +
-				         " * @link <%= pkg.homepage %>\n" +
-				         " * @module <%= pkg.name %>\n" +
-				         " * @version <%= pkg.version %>\n" +
-				         " */\n"
+		pkg: grunt.file.readJSON("package.json"),
+		concat: {
+			options: {
+				banner: "/**\n" +
+					" * <%= pkg.description %>\n" +
+					" *\n" +
+					" * @author <%= pkg.author %>\n" +
+					" * @copyright <%= grunt.template.today('yyyy') %>\n" +
+					" * @license <%= pkg.license %>\n" +
+					" * @version <%= pkg.version %>\n" +
+					" */\n"
 			},
-			dist : {
-				src : [
+			dist: {
+				src: [
 					"src/intro.js",
 					"src/route.js",
 					"src/router.js",
 					"src/outro.js"
 				],
-				dest : "lib/<%= pkg.name %>.es6.js"
+				dest: "lib/<%= pkg.name %>.es6.js"
 			}
 		},
-		"6to5": {
+		babel: {
 			options: {
-				sourceMap: false
+				sourceMap: false,
+				presets: ["babel-preset-es2015"]
 			},
 			dist: {
 				files: {
@@ -41,20 +40,46 @@ module.exports = function (grunt) {
 				]
 			}
 		},
-		mochaTest : {
+		eslint: {
+			target: [
+				"Gruntfile.js",
+				"lib/<%= pkg.name %>.es6.js",
+				"test/*.js"
+			]
+		},
+		mochaTest: {
 			options: {
 				reporter: "spec"
 			},
-			test : {
-				src : ["test/*_test.js"]
+			test: {
+				src: ["test/*_test.js"]
+			}
+		},
+		replace: {
+			dist: {
+				options: {
+					patterns: [
+						{
+							match: /{{VERSION}}/,
+							replacement: "<%= pkg.version %>"
+						}
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [
+							"lib/<%= pkg.name %>.es6.js"
+						],
+						dest: "lib/"
+					}
+				]
 			}
 		},
 		uglify: {
 			options: {
-				banner : "/*\n" +
-				" <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>\n" +
-				" @version <%= pkg.version %>\n" +
-				" */",
+				banner: '/* <%= grunt.template.today("yyyy") %> <%= pkg.author %> */\n',
 				sourceMap: true,
 				sourceMapIncludeSources: true,
 				mangle: {
@@ -63,18 +88,18 @@ module.exports = function (grunt) {
 			},
 			target: {
 				files: {
-					"lib/dom-router.min.js" : ["lib/dom-router.js"]
+					"lib/<%= pkg.name %>.min.js": ["lib/<%= pkg.name %>.js"]
 				}
 			}
 		},
-		watch : {
-			js : {
-				files : "<%= concat.dist.src %>",
-				tasks : "default"
+		watch: {
+			js: {
+				files: "<%= concat.dist.src %>",
+				tasks: "default"
 			},
 			pkg: {
-				files : "package.json",
-				tasks : "default"
+				files: "package.json",
+				tasks: "default"
 			}
 		}
 	});
@@ -85,10 +110,12 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-mocha-test");
-	grunt.loadNpmTasks("grunt-6to5");
+	grunt.loadNpmTasks("grunt-babel");
+	grunt.loadNpmTasks("grunt-eslint");
+	grunt.loadNpmTasks("grunt-replace");
 
 	// aliases
-	grunt.registerTask("test", ["mochaTest"]);
-	grunt.registerTask("build", ["concat", "6to5", "copy", "test"]);
+	grunt.registerTask("test", ["eslint", "mochaTest"]);
+	grunt.registerTask("build", ["concat", "replace", "babel", "copy", "test"]);
 	grunt.registerTask("default", ["build", "uglify"]);
 };

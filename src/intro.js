@@ -1,19 +1,7 @@
-Array.from = Array.from || ( arg ) => {
-	return [].slice.call( arg );
-};
-
-( document, window ) => {
-let not_hash = /.*\#/;
-let time = new Date().getTime();
-
-let contains = ( obj, arg ) => {
-	return obj.indexOf( arg ) > -1;
-};
-
-let render = window.requestAnimationFrame || ( fn ) => {
-	let offset = new Date().getTime() - time;
-
-	setTimeout( () => {
-		fn( offset );
-	}, 16 );
-};
+(function (document, window) {
+	const not_hash = /.*\#/,
+		contains = Array.contains || function (obj, arg) { return obj.indexOf(arg) > -1; },
+		from = Array.from || function (arg) { return [].slice.call(arg); },
+		has = function (a, b) { return a in b; },
+		time = new Date().getTime(),
+		render = window.requestAnimationFrame || function (fn) { setTimeout(fn(new Date().getTime() - time), 16); };

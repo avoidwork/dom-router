@@ -3,10 +3,10 @@
 <head>
     <title>dom-router test</title>
     <style>
-        .hidden {
+        .dr-hidden {
             display: none;
         }
-        .current {
+        .dr-current {
             font-weight: bold;
         }
     </style>
@@ -46,6 +46,8 @@
 </body>
 <script type="application/javascript" src="dom-router.js"></script>
 <script type="application/javascript">
-r = router();
+(function () {
+    var r = router();
+})();
 </script>
 </html>

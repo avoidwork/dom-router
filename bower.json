@@ -1,6 +1,5 @@
 {
   "name": "dom-router",
-  "version": "1.0.0",
   "homepage": "https://github.com/avoidwork/dom-router",
   "authors": [
     "Jason Mulligan <jason.mulligan@avoidwork.com>"
@@ -20,12 +19,15 @@
     "progressive",
     "enhancement"
   ],
-  "license": "BSD-3",
+  "license": "BSD-3-Clause",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "src",
-    "test"
+    "test",
+    ".gitignore",
+    ".npmignore",
+    ".travis.yml"
   ]
 }
