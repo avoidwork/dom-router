@@ -3,9 +3,19 @@
 <head>
     <title>dom-router test</title>
     <style>
+        html, body {
+            min-height: 100%;
+        }
+
+        body {
+            background: white;
+            color: black;
+        }
+
         .dr-hidden {
             display: none;
         }
+
         .dr-current {
             font-weight: bold;
         }
@@ -46,8 +56,6 @@
 </body>
 <script type="application/javascript" src="dom-router.js"></script>
 <script type="application/javascript">
-(function () {
-    var r = router();
-})();
+var r = router();
 </script>
 </html>

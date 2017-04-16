@@ -1,26 +1,28 @@
-var Nightmare = require("nightmare"),
-	turtleio = require("turtle.io");
+const Nightmare = require("nightmare"),
+	turtleio = require("turtle.io"),
+	port = 8001,
+	ms = 1000,
+	defaults = {
+		gotoTimeout: ms,
+		loadTimeout: ms
+	};
 
 describe("Multi-tier", function () {
-	var port = 8001,
-		ms = 50;
-
-	turtleio().start({
+	turtleio({
 		port: port,
 		default: "localhost",
 		root: __dirname,
-		vhosts: {
+		hosts: {
 			localhost: "www"
 		},
-		logs: {
-			stdout: false
+		logging: {
+			enabled: false
 		}
-	});
+	}).start();
 
-	it("GET without hash - returns #main", function (done) {
-		new Nightmare()
+	it("GET without hash - returns #main", function () {
+		return new Nightmare(defaults)
 			.goto("http://localhost:" + port + "/")
-			.wait(ms)
 			.visible("#main", function (result) {
 				if (!result) {
 					throw new Error("#main is not visible");
@@ -31,19 +33,13 @@ describe("Multi-tier", function () {
 					throw new Error("#settings is visible");
 				}
 			})
-			.run(function (err) {
-				if (err) {
-					throw err;
-				} else {
-					done();
-				}
-			});
+			.end()
+			.then(arg => arg);
 	});
 
-	it("GET invalid route - returns #main", function (done) {
-		new Nightmare()
+	it("GET invalid route - returns #main", function () {
+		new Nightmare(defaults)
 			.goto("http://localhost:" + port + "/#blahblah")
-			.wait(ms)
 			.visible("#main", function (result) {
 				if (!result) {
 					throw new Error("#main is not visible");
@@ -54,19 +50,13 @@ describe("Multi-tier", function () {
 					throw new Error("#settings is visible");
 				}
 			})
-			.run(function (err) {
-				if (err) {
-					throw err;
-				} else {
-					done();
-				}
-			});
+			.end()
+			.then(arg => arg);
 	});
 
-	it("GET default hash - returns #main", function (done) {
-		new Nightmare()
+	it("GET default hash - returns #main", function () {
+		new Nightmare(defaults)
 			.goto("http://localhost:" + port + "/#main")
-			.wait(ms)
 			.visible("#main", function (result) {
 				if (!result) {
 					throw new Error("#main is not visible");
@@ -77,19 +67,13 @@ describe("Multi-tier", function () {
 					throw new Error("#settings is visible");
 				}
 			})
-			.run(function (err) {
-				if (err) {
-					throw err;
-				} else {
-					done();
-				}
-			});
+			.end()
+			.then(arg => arg);
 	});
 
-	it("GET valid multi-tier route - returns #settings/billing", function (done) {
-		new Nightmare()
+	it("GET valid multi-tier route - returns #settings/billing", function () {
+		new Nightmare(defaults)
 			.goto("http://localhost:" + port + "/#settings/billing")
-			.wait(ms)
 			.visible("#main", function (result) {
 				if (result) {
 					throw new Error("#main is visible");
@@ -110,12 +94,7 @@ describe("Multi-tier", function () {
 					throw new Error("#avatar is visible");
 				}
 			})
-			.run(function (err) {
-				if (err) {
-					throw err;
-				} else {
-					done();
-				}
-			});
+			.end()
+			.then(arg => arg);
 	});
 });

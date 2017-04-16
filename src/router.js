@@ -1,10 +1,10 @@
 	class Router {
-		constructor ({active = true, callback = function () {}, css = {current: "dr-current", hidden: "dr-hidden"}, ctx = document.body, delimiter = "/", logging = false, stop = true} = {}) {
+		constructor ({active = true, callback = function () {}, css = {current: "dr-current", hidden: "dr-hidden"}, ctx = document.body, start = null, delimiter = "/", logging = false, stop = true} = {}) {
 			this.active = active;
 			this.callback = callback;
 			this.css = css;
 			this.ctx = ctx;
-			this.default = null;
+			this.start = start;
 			this.delimiter = delimiter;
 			this.history = [];
 			this.logging = logging;
@@ -31,7 +31,7 @@
 				}
 
 				if (!contains(this.routes, newHash)) {
-					this.route(this.routes.filter(i => contains(i, newHash))[0] || this.default);
+					this.route(this.routes.filter(i => contains(i, newHash))[0] || this.start);
 				} else {
 					render(() => {
 						let oldHashes = oldHash ? oldHash.split(self.delimiter) : [];
@@ -103,7 +103,7 @@
 
 		scan (arg) {
 			this.routes = this.select("a").filter(i => contains(i.href, "#")).map(i => i.href.replace(not_hash, ""));
-			this.default = arg || this.routes[0];
+			this.start = arg || this.routes[0];
 
 			return this;
 		}
@@ -127,13 +127,13 @@
 			window.onhashchange = facade;
 		}
 
-		obj.scan(obj.default);
+		obj.scan(obj.start);
 
 		if (!has(obj.css.hidden, obj.ctx.classList)) {
 			if (hash !== "" && contains(obj.routes, hash)) {
 				obj.hashchange({oldURL: "", newURL: document.location.hash});
 			} else {
-				obj.route(obj.default);
+				obj.route(obj.start);
 			}
 		}
 
