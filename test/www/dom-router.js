@@ -10,7 +10,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @copyright 2017
  * @license BSD-3-Clause
- * @version 1.1.2
+ * @version 2.0.0
  */
 (function (document, window) {
 	var not_hash = /.*\#/,
@@ -225,6 +225,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 		return obj;
 	}
+
+	factory.version = "2.0.0";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {

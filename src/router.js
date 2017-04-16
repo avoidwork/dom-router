@@ -139,3 +139,5 @@
 
 		return obj;
 	}
+
+	factory.version = "{{VERSION}}";

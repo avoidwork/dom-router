@@ -1,7 +1,7 @@
 {
   "name": "dom-router",
   "description": "URL hash to DOM router",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "homepage": "https://github.com/avoidwork/dom-router",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -13,9 +13,6 @@
   },
   "license": "BSD-3-Clause",
   "main": "lib/dom-router",
-  "engines": {
-    "node": ">=6.0.0"
-  },
   "scripts": {
     "test": "grunt test"
   },

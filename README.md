@@ -88,14 +88,14 @@ Function to execute after route has changed, takes `arg` which describes the eve
 #### ctx
 Context for DOM selector, defaults to `body` if not specified
 
-#### default
-[Optional] The default route to display if one is not specified, or an invalid route is specified
-
 #### delimiter
 Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each tier should map to a nested `id`
 
 #### logging
 `Boolean` which logs routing to `router.history[]` if `true`, defaults to `false`; could be a memory leak if logging is enabled and target `Elements` are removed from DOM
+
+#### start
+[Optional] The starting route to display if one is not specified, or an invalid route is specified
 
 ## API
 #### current()
@@ -115,5 +115,5 @@ Context specific DOM selector
 - `Element.classList` API, or shim
 
 ## License
-Copyright (c) 2014 Jason Mulligan
+Copyright (c) 2017 Jason Mulligan
 Licensed under the BSD-3 license

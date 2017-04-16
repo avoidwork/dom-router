@@ -1,27 +1,27 @@
 const Nightmare = require("nightmare"),
 	turtleio = require("turtle.io"),
 	port = 8001,
-	ms = 1000,
+	ms = 2000,
 	defaults = {
 		gotoTimeout: ms,
 		loadTimeout: ms
 	};
 
-describe("Multi-tier", function () {
-	turtleio({
-		port: port,
-		default: "localhost",
-		root: __dirname,
-		hosts: {
-			localhost: "www"
-		},
-		logging: {
-			enabled: false
-		}
-	}).start();
+turtleio({
+	port: port,
+	default: "localhost",
+	root: __dirname,
+	hosts: {
+		localhost: "www"
+	},
+	logging: {
+		enabled: false
+	}
+}).start();
 
+describe("Multi-tier", function () {
 	it("GET without hash - returns #main", function () {
-		return new Nightmare(defaults)
+		new Nightmare(defaults)
 			.goto("http://localhost:" + port + "/")
 			.visible("#main", function (result) {
 				if (!result) {
