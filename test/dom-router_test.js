@@ -1,7 +1,7 @@
 const Nightmare = require("nightmare"),
 	turtleio = require("turtle.io"),
 	port = 8001,
-	ms = 2000,
+	ms = 5000,
 	defaults = {
 		gotoTimeout: ms,
 		loadTimeout: ms
