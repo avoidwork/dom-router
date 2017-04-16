@@ -44,18 +44,18 @@ This would be the result if a user visited `#settings/billing`:
 <nav>
   <ul>
     <li><a href="#main">Main</a></li>
-    <li><a href="#settings/billing" class="settings current">Billing</a></li>
+    <li><a href="#settings/billing" class="settings dr-current">Billing</a></li>
     <li><a href="#settings/password" class="settings">Password</a></li>
     <li><a href="#settings/avatar" class="settings">Avatar</a></li>
   </ul>
 </nav>
 ...
 <article>
-  <section id="main" class="hidden">...</section>
+  <section id="main" class="dr-hidden">...</section>
   <section id="settings">
     <section id="billing">...</section>
-    <section id="password" class="hidden">...</section>
-    <section id="avatar" class="hidden">...</section>
+    <section id="password" class="dr-hidden">...</section>
+    <section id="avatar" class="dr-hidden">...</section>
   </section>
 </article>
 ```
@@ -83,7 +83,7 @@ When loaded with a script tag, `window.router` will be created. An ES6 version i
 Function to execute after route has changed, takes `arg` which describes the event
 
 #### css
-`Object` with `current`, & `hidden` keys which have corresponding CSS class values, defaults to "current", & "hidden"
+`Object` with `current`, & `hidden` keys which have corresponding CSS class values, defaults to "dr-current", & "dr-hidden"
 
 #### ctx
 Context for DOM selector, defaults to `body` if not specified
