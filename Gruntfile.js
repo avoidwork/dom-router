@@ -19,18 +19,7 @@ module.exports = function (grunt) {
 					"src/router.js",
 					"src/outro.js"
 				],
-				dest: "lib/<%= pkg.name %>.es6.js"
-			}
-		},
-		babel: {
-			options: {
-				sourceMap: false,
-				presets: ["babel-preset-es2015"]
-			},
-			dist: {
-				files: {
-					"lib/<%= pkg.name %>.js": "lib/<%= pkg.name %>.es6.js"
-				}
+				dest: "lib/<%= pkg.name %>.js"
 			}
 		},
 		copy: {
@@ -43,7 +32,7 @@ module.exports = function (grunt) {
 		eslint: {
 			target: [
 				"Gruntfile.js",
-				"lib/<%= pkg.name %>.es6.js",
+				"lib/<%= pkg.name %>.js",
 				"test/*.js"
 			]
 		},
@@ -70,26 +59,11 @@ module.exports = function (grunt) {
 						expand: true,
 						flatten: true,
 						src: [
-							"lib/<%= pkg.name %>.es6.js"
+							"lib/<%= pkg.name %>.js"
 						],
 						dest: "lib/"
 					}
 				]
-			}
-		},
-		uglify: {
-			options: {
-				banner: '/* <%= grunt.template.today("yyyy") %> <%= pkg.author %> */\n',
-				sourceMap: true,
-				sourceMapIncludeSources: true,
-				mangle: {
-					except: ["Router", "Descriptor", "CustomEvent", "define", "export"]
-				}
-			},
-			target: {
-				files: {
-					"lib/<%= pkg.name %>.min.js": ["lib/<%= pkg.name %>.js"]
-				}
 			}
 		},
 		watch: {
@@ -108,14 +82,32 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.loadNpmTasks("grunt-contrib-watch");
-	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-mocha-test");
-	grunt.loadNpmTasks("grunt-babel");
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-replace");
 
+	grunt.task.registerTask("babili", "Minifies ES2016+ code", function () {
+		const fs = require("fs"),
+			path = require("path"),
+			data = fs.readFileSync(path.join(__dirname, "lib", "dom-router.js"), "utf8").replace("\"use strict\";", ""), // Stripping "use strict"; because it's injected
+			pkg = require(path.join(__dirname, "package.json")),
+			banner = "/*\n " + new Date().getFullYear() + " " + pkg.author + "\n @version " + pkg.version + "\n*/\n\"use strict\";";
+
+		try {
+			const minified = require("babel-core").transform(data, {sourceFileName: "dom-router.js", sourceMaps: true, presets: ["minify"]});
+
+			fs.writeFileSync(path.join(__dirname, "lib", "dom-router.min.js"), banner + minified.code + "\n//# sourceMappingURL=dom-router.min.js.map", "utf8");
+			grunt.log.ok("1 file created.");
+			fs.writeFileSync(path.join(__dirname, "lib", "dom-router.min.js.map"), JSON.stringify(minified.map), "utf8");
+			grunt.log.ok("1 sourcemap created.");
+		} catch (e) {
+			console.error(e.stack || e.message || e);
+			throw e;
+		}
+	});
+
 	// aliases
 	grunt.registerTask("test", ["eslint", "mochaTest"]);
-	grunt.registerTask("build", ["concat", "replace", "babel", "copy", "test"]);
-	grunt.registerTask("default", ["build", "uglify"]);
+	grunt.registerTask("build", ["concat", "replace", "copy", "test"]);
+	grunt.registerTask("default", ["build", "babili"]);
 };

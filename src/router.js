@@ -18,8 +18,8 @@
 
 		hashchange (ev) {
 			const self = this,
-				oldHash = contains(ev.oldURL, "#") ? ev.oldURL.replace(not_hash, "") : null,
-				newHash = contains(ev.newURL, "#") ? ev.newURL.replace(not_hash, "") : null;
+				oldHash = includes(ev.oldURL, "#") ? ev.oldURL.replace(not_hash, "") : null,
+				newHash = includes(ev.newURL, "#") ? ev.newURL.replace(not_hash, "") : null;
 
 			if (this.active) {
 				if (this.stop === true && typeof ev.stopPropagation === "function") {
@@ -30,8 +30,8 @@
 					}
 				}
 
-				if (!contains(this.routes, newHash)) {
-					this.route(this.routes.filter(i => contains(i, newHash))[0] || this.start);
+				if (!includes(this.routes, newHash)) {
+					this.route(this.routes.filter(i => includes(i, newHash))[0] || this.start);
 				} else {
 					render(() => {
 						let oldHashes = oldHash ? oldHash.split(self.delimiter) : [];
@@ -91,7 +91,7 @@
 			return this;
 		}
 
-		route (arg) {
+		route (arg = "") {
 			document.location.hash = arg;
 
 			return this;
@@ -102,8 +102,8 @@
 		}
 
 		scan (arg) {
-			this.routes = this.select("a").filter(i => contains(i.href, "#")).map(i => i.href.replace(not_hash, ""));
-			this.start = arg || this.routes[0];
+			this.routes = this.select("a").filter(i => includes(i.href, "#")).map(i => i.href.replace(not_hash, ""));
+			this.start = arg || this.routes[0] || null;
 
 			return this;
 		}
@@ -130,7 +130,7 @@
 		obj.scan(obj.start);
 
 		if (!has(obj.css.hidden, obj.ctx.classList)) {
-			if (hash !== "" && contains(obj.routes, hash)) {
+			if (hash !== "" && includes(obj.routes, hash)) {
 				obj.hashchange({oldURL: "", newURL: document.location.hash});
 			} else {
 				obj.route(obj.start);
