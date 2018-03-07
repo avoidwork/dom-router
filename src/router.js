@@ -91,6 +91,22 @@
 			return this;
 		}
 
+		process () {
+			if (this.active) {
+				const hash = document.location.hash.replace("#", "");
+
+				this.scan(this.start);
+
+				if (!has(this.css.hidden, this.ctx.classList)) {
+					if (hash !== "" && includes(this.routes, hash)) {
+						this.hashchange({oldURL: "", newURL: document.location.hash});
+					} else {
+						this.route(this.start);
+					}
+				}
+			}
+		}
+
 		route (arg = "") {
 			document.location.hash = arg;
 
@@ -118,8 +134,11 @@
 
 	function factory (arg) {
 		const obj = new Router(arg),
-			hash = document.location.hash.replace("#", ""),
-			facade = ev => obj.hashchange.call(obj, ev);
+			facade = ev => {
+				if (obj.active) {
+					obj.hashchange.call(obj, ev);
+				}
+			};
 
 		if ("addEventListener" in window) {
 			window.addEventListener("hashchange", facade, false);
@@ -127,15 +146,7 @@
 			window.onhashchange = facade;
 		}
 
-		obj.scan(obj.start);
-
-		if (!has(obj.css.hidden, obj.ctx.classList)) {
-			if (hash !== "" && includes(obj.routes, hash)) {
-				obj.hashchange({oldURL: "", newURL: document.location.hash});
-			} else {
-				obj.route(obj.start);
-			}
-		}
+		obj.process();
 
 		return obj;
 	}
