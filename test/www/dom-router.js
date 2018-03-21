@@ -4,7 +4,7 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @copyright 2018
  * @license BSD-3-Clause
- * @version 3.0.1
+ * @version 3.0.2
  */
 (function (document, window) {
 	const not_hash = /.*\#/,
@@ -143,7 +143,7 @@
 		}
 
 		scan (arg) {
-			this.routes = this.select("a").filter(i => includes(i.href, "#")).map(i => i.href.replace(not_hash, ""));
+			this.routes = this.select("a").filter(i => includes(i.href, "#")).map(i => i.href.replace(not_hash, "")).filter(i => i !== "");
 			this.start = arg || this.routes[0] || null;
 
 			return this;
@@ -176,7 +176,7 @@
 		return obj;
 	}
 
-	factory.version = "3.0.1";
+	factory.version = "3.0.2";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {

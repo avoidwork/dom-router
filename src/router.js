@@ -118,7 +118,7 @@
 		}
 
 		scan (arg) {
-			this.routes = this.select("a").filter(i => includes(i.href, "#")).map(i => i.href.replace(not_hash, ""));
+			this.routes = this.select("a").filter(i => includes(i.href, "#")).map(i => i.href.replace(not_hash, "")).filter(i => i !== "");
 			this.start = arg || this.routes[0] || null;
 
 			return this;
