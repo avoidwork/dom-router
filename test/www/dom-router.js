@@ -4,7 +4,7 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @copyright 2018
  * @license BSD-3-Clause
- * @version 3.0.2
+ * @version 3.0.3
  */
 (function (document, window) {
 	const not_hash = /.*\#/,
@@ -42,8 +42,7 @@
 		}
 
 		hashchange (ev) {
-			const self = this,
-				oldHash = includes(ev.oldURL, "#") ? ev.oldURL.replace(not_hash, "") : null,
+			const oldHash = includes(ev.oldURL, "#") ? ev.oldURL.replace(not_hash, "") : null,
 				newHash = includes(ev.newURL, "#") ? ev.newURL.replace(not_hash, "") : null;
 
 			if (this.active) {
@@ -59,27 +58,22 @@
 					this.route(this.routes.filter(i => includes(i, newHash))[0] || this.start);
 				} else {
 					render(() => {
-						let oldHashes = oldHash ? oldHash.split(self.delimiter) : [];
-						let newHashes = newHash.split(self.delimiter);
+						const oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
+							newHashes = newHash.split(this.delimiter);
 						let newEl, newTrigger;
 
 						newHashes.forEach((i, idx) => {
-							let nth = idx + 1;
-							let valid = oldHashes.length >= nth;
-							let oldEl = valid ? self.select("#" + oldHashes.slice(0, nth).join(" > #"))[0] : null;
-							let oldTrigger = valid ? self.select("a[href='#" + oldHashes.slice(0, nth).join(self.delimiter) + "']")[0] : null;
+							let nth = idx + 1,
+								valid = oldHashes.length >= nth,
+								oldEl = valid ? this.select("#" + oldHashes.slice(0, nth).join(" > #"))[0] : null,
+								oldTrigger = valid ? this.select("a[href='#" + oldHashes.slice(0, nth).join(this.delimiter) + "']")[0] : null;
 
-							newEl = self.select("#" + newHashes.slice(0, nth).join(" > #"))[0];
-							newTrigger = self.select("a[href='#" + newHashes.slice(0, nth).join(self.delimiter) + "']")[0];
-
-							self.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
+							newEl = this.select("#" + newHashes.slice(0, nth).join(" > #"))[0];
+							newTrigger = this.select("a[href='#" + newHashes.slice(0, nth).join(this.delimiter) + "']")[0];
+							this.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
 						}, this);
 
-						if (self.css.current && self.history.length > 0) {
-							self.history[0].trigger.classList.remove(self.css.current);
-						}
-
-						let r = new Route({element: newEl || null, hash: newHash, trigger: newTrigger || null});
+						const r = new Route({element: newEl || null, hash: newHash, trigger: newTrigger || null});
 
 						self.log(r);
 						self.callback(r);
@@ -176,7 +170,7 @@
 		return obj;
 	}
 
-	factory.version = "3.0.2";
+	factory.version = "3.0.3";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {
