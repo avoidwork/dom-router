@@ -4,7 +4,7 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @copyright 2018
  * @license BSD-3-Clause
- * @version 3.0.3
+ * @version 3.0.4
  */
 (function (document, window) {
 	const not_hash = /.*\#/,
@@ -24,11 +24,12 @@
 	}
 
 	class Router {
-		constructor ({active = true, callback = function () {}, css = {current: "dr-current", hidden: "dr-hidden"}, ctx = document.body, start = null, delimiter = "/", logging = false, stop = true} = {}) {
+		constructor ({active = true, callback = function () {}, css = {current: "dr-current", hidden: "dr-hidden"}, ctx = document.body, start = null, delimiter = "/", error = function () {}, logging = false, stop = true} = {}) {
 			this.active = active;
 			this.callback = callback;
 			this.css = css;
 			this.ctx = ctx;
+			this.error = error;
 			this.start = start;
 			this.delimiter = delimiter;
 			this.history = [];
@@ -58,25 +59,29 @@
 					this.route(this.routes.filter(i => includes(i, newHash))[0] || this.start);
 				} else {
 					render(() => {
-						const oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
-							newHashes = newHash.split(this.delimiter);
-						let newEl, newTrigger;
+						try {
+							const oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
+								newHashes = newHash.split(this.delimiter);
+							let newEl, newTrigger;
 
-						newHashes.forEach((i, idx) => {
-							let nth = idx + 1,
-								valid = oldHashes.length >= nth,
-								oldEl = valid ? this.select("#" + oldHashes.slice(0, nth).join(" > #"))[0] : null,
-								oldTrigger = valid ? this.select("a[href='#" + oldHashes.slice(0, nth).join(this.delimiter) + "']")[0] : null;
+							newHashes.forEach((i, idx) => {
+								let nth = idx + 1,
+									valid = oldHashes.length >= nth,
+									oldEl = valid ? this.select("#" + oldHashes.slice(0, nth).join(" > #"))[0] : null,
+									oldTrigger = valid ? this.select("a[href='#" + oldHashes.slice(0, nth).join(this.delimiter) + "']")[0] : null;
 
-							newEl = this.select("#" + newHashes.slice(0, nth).join(" > #"))[0];
-							newTrigger = this.select("a[href='#" + newHashes.slice(0, nth).join(this.delimiter) + "']")[0];
-							this.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
-						}, this);
+								newEl = this.select("#" + newHashes.slice(0, nth).join(" > #"))[0];
+								newTrigger = this.select("a[href='#" + newHashes.slice(0, nth).join(this.delimiter) + "']")[0];
+								this.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
+							}, this);
 
-						const r = new Route({element: newEl || null, hash: newHash, trigger: newTrigger || null});
+							const r = new Route({element: newEl || null, hash: newHash, trigger: newTrigger || null});
 
-						self.log(r);
-						self.callback(r);
+							self.log(r);
+							self.callback(r);
+						} catch (err) {
+							this.error(err);
+						}
 					});
 				}
 			}
@@ -170,7 +175,7 @@
 		return obj;
 	}
 
-	factory.version = "3.0.3";
+	factory.version = "3.0.4";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {
