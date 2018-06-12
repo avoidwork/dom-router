@@ -56,8 +56,8 @@
 								trigger: newTrigger || null
 							});
 
-							self.log(r);
-							self.callback(r);
+							this.log(r);
+							this.callback(r);
 						} catch (err) {
 							this.error(err);
 						}

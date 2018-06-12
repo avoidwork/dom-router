@@ -4,7 +4,7 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @copyright 2018
  * @license BSD-3-Clause
- * @version 3.0.5
+ * @version 3.0.6
  */
 (function (document, window) {
 	const not_hash = /.*\#/,
@@ -81,8 +81,8 @@
 								trigger: newTrigger || null
 							});
 
-							self.log(r);
-							self.callback(r);
+							this.log(r);
+							this.callback(r);
 						} catch (err) {
 							this.error(err);
 						}
@@ -179,7 +179,7 @@
 		return obj;
 	}
 
-	factory.version = "3.0.5";
+	factory.version = "3.0.6";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {
