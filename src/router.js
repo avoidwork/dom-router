@@ -21,7 +21,7 @@
 			const oldHash = includes(ev.oldURL, "#") ? ev.oldURL.replace(not_hash, "") : null,
 				newHash = includes(ev.newURL, "#") ? ev.newURL.replace(not_hash, "") : null;
 
-			if (this.active) {
+			if (this.active && this.valid(newHash)) {
 				if (this.stop === true && typeof ev.stopPropagation === "function") {
 					ev.stopPropagation();
 
@@ -50,7 +50,11 @@
 								this.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
 							}, this);
 
-							const r = new Route({element: newEl || null, hash: newHash, trigger: newTrigger || null});
+							const r = new Route({
+								element: newEl || null,
+								hash: newHash,
+								trigger: newTrigger || null
+							});
 
 							self.log(r);
 							self.callback(r);
@@ -91,17 +95,15 @@
 		}
 
 		process () {
-			if (this.active) {
-				const hash = document.location.hash.replace("#", "");
+			const hash = document.location.hash.replace("#", "");
 
-				this.scan(this.start);
+			this.scan(this.start);
 
-				if (!has(this.css.hidden, this.ctx.classList)) {
-					if (hash !== "" && includes(this.routes, hash)) {
-						this.hashchange({oldURL: "", newURL: document.location.hash});
-					} else {
-						this.route(this.start);
-					}
+			if (!has(this.css.hidden, this.ctx.classList)) {
+				if (hash !== "" && includes(this.routes, hash)) {
+					this.hashchange({oldURL: "", newURL: document.location.hash});
+				} else {
+					this.route(this.start);
 				}
 			}
 		}
@@ -129,15 +131,15 @@
 
 			return this;
 		}
+
+		valid (arg = "") {
+			return arg === "" || (/=/).test(arg) === false;
+		}
 	}
 
 	function factory (arg) {
 		const obj = new Router(arg),
-			facade = ev => {
-				if (obj.active) {
-					obj.hashchange.call(obj, ev);
-				}
-			};
+			facade = ev => obj.hashchange.call(obj, ev);
 
 		if ("addEventListener" in window) {
 			window.addEventListener("hashchange", facade, false);
@@ -145,7 +147,9 @@
 			window.onhashchange = facade;
 		}
 
-		obj.process();
+		if (obj.active) {
+			obj.process();
+		}
 
 		return obj;
 	}
