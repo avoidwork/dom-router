@@ -4,7 +4,7 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @copyright 2018
  * @license BSD-3-Clause
- * @version 3.0.7
+ * @version 3.0.8
  */
 (function (document, window) {
 	const not_hash = /.*\#/,
@@ -163,13 +163,14 @@
 	}
 
 	function factory (arg) {
-		const obj = new Router(arg),
-			facade = ev => obj.hashchange.call(obj, ev);
+		const obj = new Router(arg);
+
+		obj.hashchange = obj.hashchange.bind(obj);
 
 		if ("addEventListener" in window) {
-			window.addEventListener("hashchange", facade, false);
+			window.addEventListener("hashchange", obj.hashchange, false);
 		} else {
-			window.onhashchange = facade;
+			window.onhashchange = obj.hashchange;
 		}
 
 		if (obj.active) {
@@ -179,7 +180,7 @@
 		return obj;
 	}
 
-	factory.version = "3.0.7";
+	factory.version = "3.0.8";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {

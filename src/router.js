@@ -138,13 +138,14 @@
 	}
 
 	function factory (arg) {
-		const obj = new Router(arg),
-			facade = ev => obj.hashchange.call(obj, ev);
+		const obj = new Router(arg);
+
+		obj.hashchange = obj.hashchange.bind(obj);
 
 		if ("addEventListener" in window) {
-			window.addEventListener("hashchange", facade, false);
+			window.addEventListener("hashchange", obj.hashchange, false);
 		} else {
-			window.onhashchange = facade;
+			window.onhashchange = obj.hashchange;
 		}
 
 		if (obj.active) {
