@@ -108,6 +108,6 @@ module.exports = function (grunt) {
 
 	// aliases
 	grunt.registerTask("test", ["eslint", "mochaTest"]);
-	grunt.registerTask("build", ["concat", "replace", "copy", "test"]);
-	grunt.registerTask("default", ["build", "babili"]);
+	grunt.registerTask("build", ["concat", "replace", "copy"]);
+	grunt.registerTask("default", ["build", "babili", "test"]);
 };
