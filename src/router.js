@@ -42,10 +42,10 @@
 							newHashes.forEach((i, idx) => {
 								let nth = idx + 1,
 									valid = oldHashes.length >= nth,
-									oldEl = valid ? this.select("#" + oldHashes.slice(0, nth).join(" > #"))[0] : null,
+									oldEl = valid ? this.select("#" + oldHashes.slice(0, nth).join(" #"))[0] : null,
 									oldTrigger = valid ? this.select("a[href='#" + oldHashes.slice(0, nth).join(this.delimiter) + "']")[0] : null;
 
-								newEl = this.select("#" + newHashes.slice(0, nth).join(" > #"))[0];
+								newEl = this.select("#" + newHashes.slice(0, nth).join(" #"))[0];
 								newTrigger = this.select("a[href='#" + newHashes.slice(0, nth).join(this.delimiter) + "']")[0];
 								this.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
 							}, this);

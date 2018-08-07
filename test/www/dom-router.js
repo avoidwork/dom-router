@@ -4,7 +4,7 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @copyright 2018
  * @license BSD-3-Clause
- * @version 3.0.6
+ * @version 3.0.7
  */
 (function (document, window) {
 	const not_hash = /.*\#/,
@@ -67,10 +67,10 @@
 							newHashes.forEach((i, idx) => {
 								let nth = idx + 1,
 									valid = oldHashes.length >= nth,
-									oldEl = valid ? this.select("#" + oldHashes.slice(0, nth).join(" > #"))[0] : null,
+									oldEl = valid ? this.select("#" + oldHashes.slice(0, nth).join(" #"))[0] : null,
 									oldTrigger = valid ? this.select("a[href='#" + oldHashes.slice(0, nth).join(this.delimiter) + "']")[0] : null;
 
-								newEl = this.select("#" + newHashes.slice(0, nth).join(" > #"))[0];
+								newEl = this.select("#" + newHashes.slice(0, nth).join(" #"))[0];
 								newTrigger = this.select("a[href='#" + newHashes.slice(0, nth).join(this.delimiter) + "']")[0];
 								this.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
 							}, this);
@@ -179,7 +179,7 @@
 		return obj;
 	}
 
-	factory.version = "3.0.6";
+	factory.version = "3.0.7";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {
