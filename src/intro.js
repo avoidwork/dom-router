@@ -1,3 +1,5 @@
+"use strict";
+
 (function (document, window) {
 	const not_hash = /.*\#/,
 		includes = typeof Array.includes === "function" ? (obj, arg) => obj.includes(arg) : (obj, arg) => obj.indexOf(arg) > -1,

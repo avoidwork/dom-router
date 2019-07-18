@@ -4,8 +4,11 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @copyright 2019
  * @license BSD-3-Clause
- * @version 3.1.0
+ * @version 3.1.1
  */
+
+"use strict";
+
 (function (document, window) {
 	const not_hash = /.*\#/,
 		includes = typeof Array.includes === "function" ? (obj, arg) => obj.includes(arg) : (obj, arg) => obj.indexOf(arg) > -1,
@@ -182,7 +185,7 @@
 		return obj;
 	}
 
-	factory.version = "3.1.0";
+	factory.version = "3.1.1";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {
