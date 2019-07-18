@@ -110,5 +110,5 @@ Context specific DOM selector
 - `Element.classList` API, or shim
 
 ## License
-Copyright (c) 2018 Jason Mulligan
+Copyright (c) 2019 Jason Mulligan
 Licensed under the BSD-3 license
