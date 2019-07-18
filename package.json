@@ -15,7 +15,7 @@
   "main": "lib/dom-router",
   "engineStrict": true,
   "engines": {
-    "node": ">= 7.6.0"
+    "node": ">= 8.6.0"
   },
   "scripts": {
     "test": "grunt test"
