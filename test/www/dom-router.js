@@ -65,20 +65,20 @@
 							let newEl, newTrigger;
 
 							newHashes.forEach((i, idx) => {
-								let nth = idx + 1,
+								const nth = idx + 1,
 									valid = oldHashes.length >= nth,
-									oldEl = valid ? this.select("#" + oldHashes.slice(0, nth).join(" #"))[0] : null,
-									oldTrigger = valid ? this.select("a[href='#" + oldHashes.slice(0, nth).join(this.delimiter) + "']")[0] : null;
+									oldEl = valid ? this.select(`#${oldHashes.slice(0, nth).join(" #")}`) : void 0,
+									oldTrigger = valid ? this.select(`a[href='#${oldHashes.slice(0, nth).join(this.delimiter)}']`) : void 0;
 
-								newEl = this.select("#" + newHashes.slice(0, nth).join(" #"))[0];
-								newTrigger = this.select("a[href='#" + newHashes.slice(0, nth).join(this.delimiter) + "']")[0];
-								this.load(oldTrigger || null, oldEl || null, newTrigger || null, newEl || null);
+								newEl = this.select(`#${newHashes.slice(0, nth).join(" #")}`);
+								newTrigger = this.select(`a[href='#${newHashes.slice(0, nth).join(this.delimiter)}']`);
+								this.load(oldTrigger, oldEl, newTrigger, newEl);
 							}, this);
 
 							const r = new Route({
-								element: newEl || null,
+								element: newEl,
 								hash: newHash,
-								trigger: newTrigger || null
+								trigger: newTrigger
 							});
 
 							this.log(r);
@@ -91,21 +91,23 @@
 			}
 		}
 
-		load (oldTrigger, oldEl, newTrigger, newEl) {
-			if (oldTrigger && this.css.current) {
-				oldTrigger.classList.remove(this.css.current);
-			}
+		load (oldTrigger = [], oldEl = [], newTrigger = [], newEl = []) {
+			if (this.css.current.length > 0) {
+				if (oldTrigger.length > 0) {
+					oldTrigger.forEach(i => i.classList.remove(this.css.current));
+				}
 
-			if (oldEl && oldEl.id !== newEl.id) {
-				oldEl.classList.add(this.css.hidden);
-			}
+				if (oldEl.length > 0 && oldEl.id !== newEl.id) {
+					oldEl.forEach(i => i.classList.add(this.css.hidden));
+				}
 
-			if (newTrigger && this.css.current) {
-				newTrigger.classList.add(this.css.current);
-			}
+				if (newTrigger.length > 0) {
+					newTrigger.forEach(i => i.classList.add(this.css.current));
+				}
 
-			if (newEl) {
-				this.sweep(newEl, this.css.hidden);
+				if (newEl.length > 0) {
+					newEl.forEach(i => this.sweep(i, this.css.hidden));
+				}
 			}
 
 			return this;
@@ -125,7 +127,7 @@
 			this.scan(this.start);
 
 			if (!has(this.css.hidden, this.ctx.classList)) {
-				if (hash !== "" && includes(this.routes, hash)) {
+				if (hash.length > 0 && includes(this.routes, hash)) {
 					this.hashchange({oldURL: "", newURL: document.location.hash});
 				} else {
 					this.route(this.start);
