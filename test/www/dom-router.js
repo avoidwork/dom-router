@@ -2,9 +2,9 @@
  * URL hash DOM router
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @copyright 2019
+ * @copyright 2020
  * @license BSD-3-Clause
- * @version 3.1.3
+ * @version 3.1.4
  */
 
 "use strict";
@@ -65,7 +65,14 @@
 						try {
 							const oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
 								newHashes = newHash.split(this.delimiter);
-							let newEl, newTrigger;
+							let oldRoute = "",
+								newEl, newTrigger;
+
+							// deep links
+							for (const loldHash of oldHashes) {
+								oldRoute += `${oldRoute.length > 0 ? `${this.delimiter}` : ""}${loldHash}`;
+								this.select(`a[href="#${oldRoute}"]`).forEach(o => o.classList.remove("is-active"));
+							}
 
 							newHashes.forEach((i, idx) => {
 								const nth = idx + 1,
@@ -185,7 +192,7 @@
 		return obj;
 	}
 
-	factory.version = "3.1.3";
+	factory.version = "3.1.4";
 
 	// CJS, AMD & window supported
 	if (typeof exports !== "undefined") {

@@ -37,7 +37,14 @@
 						try {
 							const oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
 								newHashes = newHash.split(this.delimiter);
-							let newEl, newTrigger;
+							let oldRoute = "",
+								newEl, newTrigger;
+
+							// deep links
+							for (const loldHash of oldHashes) {
+								oldRoute += `${oldRoute.length > 0 ? `${this.delimiter}` : ""}${loldHash}`;
+								this.select(`a[href="#${oldRoute}"]`).forEach(o => o.classList.remove("is-active"));
+							}
 
 							newHashes.forEach((i, idx) => {
 								const nth = idx + 1,
