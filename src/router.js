@@ -33,6 +33,8 @@
 				if (!includes(this.routes, newHash)) {
 					this.route(this.routes.filter(i => includes(i, newHash))[0] || this.start);
 				} else {
+					const y = document.body.scrollTop;
+
 					render(() => {
 						try {
 							const oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
@@ -63,6 +65,7 @@
 								trigger: newTrigger
 							});
 
+							document.body.scrollTop = y;
 							this.log(r);
 							this.callback(r);
 						} catch (err) {
