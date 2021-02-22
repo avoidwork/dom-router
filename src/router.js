@@ -18,18 +18,24 @@
 		}
 
 		hashchange (ev) {
+			if (this.stop) {
+				if ("stopPropagation" in ev && typeof ev.stopPropagation === "function") {
+					ev.stopPropagation();
+				}
+
+				if ("preventDefault" in ev && typeof ev.preventDefault === "function") {
+					ev.preventDefault();
+				}
+			}
+
+			this.handler(ev);
+		}
+
+		handler (ev) {
 			const oldHash = includes(ev.oldURL, "#") ? ev.oldURL.replace(not_hash, "") : null,
 				newHash = includes(ev.newURL, "#") ? ev.newURL.replace(not_hash, "") : null;
 
 			if (this.active && this.valid(newHash)) {
-				if (this.stop === true && typeof ev.stopPropagation === "function") {
-					ev.stopPropagation();
-
-					if (typeof ev.preventDefault === "function") {
-						ev.preventDefault();
-					}
-				}
-
 				if (!includes(this.routes, newHash)) {
 					this.route(this.routes.filter(i => includes(i, newHash))[0] || this.start);
 				} else {
@@ -113,7 +119,7 @@
 
 			if (!has(this.css.hidden, this.ctx.classList)) {
 				if (hash.length > 0 && includes(this.routes, hash)) {
-					this.hashchange({oldURL: "", newURL: document.location.hash});
+					this.handler({oldURL: "", newURL: document.location.hash});
 				} else {
 					this.route(this.start);
 				}
