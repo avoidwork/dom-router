@@ -94,10 +94,10 @@ Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each ti
 
 ## API
 #### current()
-Returns the current `Route`, if logging is enabled
+Returns the current `Route`; if logging is enabled the trigger `Element` will be present
 
-#### popstate(ev)
-Event handler, expects `{oldURL: "", newURL: ""}`
+#### popstate()
+Event handler
 
 #### scan(default)
 Scans `ctx` for routes & resets `default` which is an optional argument, otherwise it defaults to the first route
@@ -108,6 +108,7 @@ Context specific DOM selector
 
 ## Requirements
 - `Element.classList` API, or shim
+- `popstate` Event
 
 ## License
 Copyright (c) 2021 Jason Mulligan
