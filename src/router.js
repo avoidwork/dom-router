@@ -14,26 +14,12 @@
 		}
 
 		current () {
-			return this.history[0];
+			return this.history[this.history.length - 1];
 		}
 
-		hashchange (ev) {
-			if (this.stop) {
-				if ("stopPropagation" in ev && typeof ev.stopPropagation === "function") {
-					ev.stopPropagation();
-				}
-
-				if ("preventDefault" in ev && typeof ev.preventDefault === "function") {
-					ev.preventDefault();
-				}
-			}
-
-			this.handler(ev);
-		}
-
-		handler (ev) {
-			const oldHash = includes(ev.oldURL, "#") ? ev.oldURL.replace(not_hash, "") : null,
-				newHash = includes(ev.newURL, "#") ? ev.newURL.replace(not_hash, "") : null;
+		handler () {
+			const oldHash = this.history.length > 0 ? (this.current().hash || "").replace(not_hash, "") || null : null,
+				newHash = includes(location.hash, "#") ? location.hash.replace(not_hash, "") : null;
 
 			if (this.active && this.valid(newHash)) {
 				if (!includes(this.routes, newHash)) {
@@ -105,11 +91,13 @@
 		}
 
 		log (arg) {
-			if (this.logging) {
-				this.history.unshift(arg);
-			}
+			this.history.push(this.logging ? arg : {hash: arg.hash});
 
 			return this;
+		}
+
+		popstate (ev) {
+			this.handler(ev);
 		}
 
 		process () {
@@ -158,12 +146,12 @@
 	function factory (arg) {
 		const obj = new Router(arg);
 
-		obj.hashchange = obj.hashchange.bind(obj);
+		obj.popstate = obj.popstate.bind(obj);
 
 		if ("addEventListener" in window) {
-			window.addEventListener("hashchange", obj.hashchange, false);
+			window.addEventListener("popstate", obj.popstate, false);
 		} else {
-			window.onhashchange = obj.hashchange;
+			window.onpopstate = obj.popstate;
 		}
 
 		if (obj.active) {

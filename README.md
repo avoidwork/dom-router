@@ -3,7 +3,7 @@
 [![build status](https://secure.travis-ci.org/avoidwork/dom-router.svg)](http://travis-ci.org/avoidwork/dom-router)
 
 Imagine you didn't have to write a bunch of JavaScript to get a slick, progressively enhanced interface! `dom-router`
-is a URL hash to DOM router which automatically, & intelligently toggles visibility of `Elements` based on `hashchange`
+is a URL hash to DOM router which automatically, & intelligently toggles visibility of `Elements` based on `popstate`
 events.
 
 This provides a clean separation of concerns, and progressive enhancement in a simple library. You can write clean HTML,
@@ -96,7 +96,7 @@ Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each ti
 #### current()
 Returns the current `Route`, if logging is enabled
 
-#### hashchange(ev)
+#### popstate(ev)
 Event handler, expects `{oldURL: "", newURL: ""}`
 
 #### scan(default)
