@@ -124,8 +124,14 @@
 			return from(this.ctx.querySelectorAll.call(this.ctx, arg));
 		}
 
-		scan (arg) {
+		scan (arg = "") {
 			this.routes = Array.from(new Set(this.select("a").filter(i => includes(i.href, "#")).map(i => i.href.replace(not_hash, "")).filter(i => i !== "")));
+
+			if (arg.length > 0) {
+				this.routes.push(arg);
+				this.routes = Array.from(new Set(this.routes));
+			}
+
 			this.start = arg || this.routes[0] || null;
 
 			return this;
