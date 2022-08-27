@@ -1,170 +1,194 @@
-	class Router {
-		constructor ({active = true, callback = function () {}, css = {current: "dr-current", hidden: "dr-hidden"}, ctx = document.body, start = null, delimiter = "/", error = function () {}, logging = false, stop = true} = {}) {
-			this.active = active;
-			this.callback = callback;
-			this.css = css;
-			this.ctx = ctx;
-			this.error = error;
-			this.start = start;
-			this.delimiter = delimiter;
-			this.history = [];
-			this.logging = logging;
-			this.routes = [];
-			this.stop = stop;
-		}
+import {cssCurrent, cssHidden, delimiter as slash, empty, hash, notHash, selectorHasHash} from "./constants.js";
+import {route} from "./route.js";
 
-		current () {
-			return this.history[this.history.length - 1];
-		}
+class Router {
+	constructor ({active = true, callback = function () {}, css = {current: cssCurrent, hidden: cssHidden}, ctx = document.body, start = null, delimiter = slash, logging = false, stickyPos = true, stickyRoute = true, stop = true, storage = "session", storageKey = "lastRoute"} = {}) {
+		this.active = active;
+		this.callback = callback;
+		this.css = css;
+		this.ctx = ctx;
+		this.delimiter = delimiter;
+		this.history = [];
+		this.logging = logging;
+		this.routes = [];
+		this.stickyPos = stickyPos;
+		this.stickyRoute = stickyRoute;
+		this.storage = storage === "session" ? sessionStorage : localStorage;
+		this.storageKey = storageKey;
+		this.stop = stop;
+		this.start = this.stickyRoute ? this.storage.getItem(this.storageKey) || start : start;
+	}
 
-		handler () {
-			const oldHash = this.history.length > 0 ? (this.current().hash || "").replace(not_hash, "") || null : null,
-				newHash = includes(location.hash, "#") ? location.hash.replace(not_hash, "") : null;
+	current () {
+		return this.history[this.history.length - 1];
+	}
 
-			if (this.active && this.valid(newHash)) {
-				if (!includes(this.routes, newHash)) {
-					this.route(this.routes.filter(i => includes(i, newHash))[0] || this.start);
-				} else {
-					const y = document.body.scrollTop;
+	handler () {
+		const oldHash = this.history.length > 0 ? (this.current().hash || empty).replace(notHash, empty) || null : null,
+			newHash = location.hash.includes(hash) ? location.hash.replace(notHash, empty) : null;
 
-					render(() => {
-						try {
-							const oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
-								newHashes = newHash.split(this.delimiter);
-							let oldRoute = "",
-								newEl, newTrigger;
+		if (this.active && this.valid(newHash)) {
+			if (!this.routes.includes(newHash)) {
+				this.route(this.routes.filter(i => i.includes(newHash))[0] || this.start);
+			} else {
+				const y = document.body.scrollTop,
+					oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
+					newHashes = newHash.split(this.delimiter),
+					remove = [];
+				let oldRoute = empty;
 
-							// deep links
-							for (const loldHash of oldHashes) {
-								oldRoute += `${oldRoute.length > 0 ? `${this.delimiter}` : ""}${loldHash}`;
-								this.select(`a[href="#${oldRoute}"]`).forEach(o => o.classList.remove(this.css.current));
-							}
+				for (const loldHash of oldHashes) {
+					oldRoute += `${oldRoute.length > 0 ? `${this.delimiter}` : empty}${loldHash}`;
 
-							newHashes.forEach((i, idx) => {
-								const nth = idx + 1,
-									valid = oldHashes.length >= nth,
-									oldEl = valid ? this.select(`#${oldHashes.slice(0, nth).join(" #")}`) : void 0,
-									oldTrigger = valid ? this.select(`a[href='#${oldHashes.slice(0, nth).join(this.delimiter)}']`) : void 0;
+					const elements = this.select(`a[href="#${oldRoute}"]`);
 
-								newEl = this.select(`#${newHashes.slice(0, nth).join(" #")}`);
-								newTrigger = this.select(`a[href='#${newHashes.slice(0, nth).join(this.delimiter)}']`);
-								this.load(oldTrigger, oldEl, newTrigger, newEl);
-							}, this);
+					remove.push(...elements)
+				}
 
-							const r = new Route({
-								element: newEl,
-								hash: newHash,
-								trigger: newTrigger
-							});
+				render(() => {
+					let newEl, newTrigger;
 
-							document.body.scrollTop = y;
-							this.log(r);
-							this.callback(r);
-						} catch (err) {
-							this.error(err);
-						}
+					for (const i of remove) {
+						i.classList.remove(this.css.current);
+					}
+
+					for (const idx of newHashes.keys()) {
+						const nth = idx + 1,
+							valid = oldHashes.length >= nth,
+							oldEl = valid ? this.select(`#${oldHashes.slice(0, nth).join(" #")}`) : void 0,
+							oldTrigger = valid ? this.select(`a[href='#${oldHashes.slice(0, nth).join(this.delimiter)}']`) : void 0;
+
+						newEl = this.select(`#${newHashes.slice(0, nth).join(" #")}`);
+						newTrigger = this.select(`a[href='#${newHashes.slice(0, nth).join(this.delimiter)}']`);
+						this.load(oldTrigger, oldEl, newTrigger, newEl);
+					}
+
+					if (this.stickyRoute) {
+						this.storage.setItem(this.storageKey, newHash);
+					}
+
+					if (this.stickyPos) {
+						document.body.scrollTop = y;
+					}
+
+					const r = route({
+						element: newEl,
+						hash: newHash,
+						trigger: newTrigger
 					});
-				}
+
+					this.log(r);
+					this.callback(r);
+				});
 			}
 		}
 
-		load (oldTrigger = [], oldEl = [], newTrigger = [], newEl = []) {
-			if (this.css.current.length > 0) {
-				if (oldTrigger.length > 0) {
-					oldTrigger.forEach(i => i.classList.remove(this.css.current));
-				}
-
-				if (oldEl.length > 0 && oldEl.id !== newEl.id) {
-					oldEl.forEach(i => i.classList.add(this.css.hidden));
-				}
-
-				if (newTrigger.length > 0) {
-					newTrigger.forEach(i => i.classList.add(this.css.current));
-				}
-
-				if (newEl.length > 0) {
-					newEl.forEach(i => this.sweep(i, this.css.hidden));
-				}
-			}
-
-			return this;
-		}
-
-		log (arg) {
-			this.history.push(this.logging ? arg : {hash: arg.hash});
-
-			return this;
-		}
-
-		popstate (ev) {
-			this.handler(ev);
-		}
-
-		process () {
-			const hash = document.location.hash.replace("#", "");
-
-			this.scan(this.start);
-
-			if (!has(this.css.hidden, this.ctx.classList)) {
-				if (hash.length > 0 && includes(this.routes, hash)) {
-					this.handler();
-				} else {
-					this.route(this.start);
-				}
-			}
-		}
-
-		route (arg = "") {
-			document.location.hash = arg;
-
-			return this;
-		}
-
-		select (arg) {
-			return from(this.ctx.querySelectorAll.call(this.ctx, arg));
-		}
-
-		scan (arg = "") {
-			this.routes = Array.from(new Set(this.select("a").filter(i => includes(i.href, "#")).map(i => i.href.replace(not_hash, "")).filter(i => i !== "")));
-
-			if (arg.length > 0) {
-				this.routes.push(arg);
-				this.routes = Array.from(new Set(this.routes));
-			}
-
-			this.start = arg || this.routes[0] || null;
-
-			return this;
-		}
-
-		sweep (obj, klass) {
-			from(obj.parentNode.childNodes).filter(i => i.nodeType === 1 && i.id && i.id !== obj.id).forEach(i => i.classList.add(klass));
-			obj.classList.remove(klass);
-
-			return this;
-		}
-
-		valid (arg = "") {
-			return arg === "" || (/=/).test(arg) === false;
-		}
+		return this;
 	}
 
-	function factory (arg) {
-		const obj = new Router(arg);
-
-		obj.popstate = obj.popstate.bind(obj);
-
-		if ("addEventListener" in window) {
-			window.addEventListener("popstate", obj.popstate, false);
-		} else {
-			window.onpopstate = obj.popstate;
+	load (oldTrigger = [], oldEl = [], newTrigger = [], newEl = []) {
+		for (const i of oldTrigger) {
+			i.classList.remove(this.css.current);
 		}
 
-		if (obj.active) {
-			obj.process();
+		if (oldEl.length > 0 && oldEl.id !== newEl.id) {
+			for (const i of oldEl) {
+				i.classList.add(this.css.hidden);
+			}
 		}
 
-		return obj;
+		for (const i of newTrigger) {
+			i.classList.add(this.css.current);
+		}
+
+		if (oldEl.length > 0 && oldEl.id !== newEl.id) {
+			for (const i of oldEl) {
+				i.classList.add(this.css.hidden);
+			}
+		}
+
+		return this;
 	}
 
-	factory.version = "{{VERSION}}";
+	log (arg) {
+		this.history.push(this.logging ? arg : {hash: arg.hash});
+
+		return this;
+	}
+
+	popstate (ev) {
+		this.handler(ev);
+
+		return this;
+	}
+
+	process () {
+		const hash = document.location.hash.replace(hash, empty);
+
+		this.scan(this.start);
+
+		if (!this.ctx.classList.contains(this.css.hidden)) {
+			if (hash.length > 0 && this.routes.includes(hash)) {
+				this.handler();
+			} else {
+				this.route(this.start);
+			}
+		}
+
+		return this;
+	}
+
+	route (arg = empty) {
+		document.location.hash = arg;
+
+		return this;
+	}
+
+	select (arg) {
+		return Array.from(this.ctx.querySelectorAll.call(this.ctx, arg));
+	}
+
+	scan (arg = empty) {
+		const selector = "a[href=*'#']";
+
+		this.routes = Array.from(new Set(this.select(selector).map(i => i.href.replace(notHash, empty)).filter(i => i !== empty)));
+
+		if (arg.length > 0) {
+			this.routes.push(arg);
+			this.routes = Array.from(new Set(this.routes));
+		}
+
+		this.start = arg || this.routes[0] || null;
+
+		return this;
+	}
+
+	sweep (obj, klass) {
+		Array.from(obj.parentNode.childNodes).filter(i => i.nodeType === 1 && i.id && i.id !== obj.id).forEach(i => i.classList.add(klass));
+		obj.classList.remove(klass);
+
+		return this;
+	}
+
+	valid (arg = empty) {
+		return arg === empty || (/=/).test(arg) === false;
+	}
+}
+
+export function factory (arg) {
+	const obj = new Router(arg);
+
+	obj.popstate = obj.popstate.bind(obj);
+
+	if ("addEventListener" in window) {
+		window.addEventListener("popstate", obj.popstate, false);
+	} else {
+		window.onpopstate = obj.popstate;
+	}
+
+	if (obj.active) {
+		obj.process();
+	}
+
+	return obj;
+}

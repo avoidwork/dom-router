@@ -1,7 +1,5 @@
 # dom-router
 
-[![build status](https://secure.travis-ci.org/avoidwork/dom-router.svg)](http://travis-ci.org/avoidwork/dom-router)
-
 Imagine you didn't have to write a bunch of JavaScript to get a slick, progressively enhanced interface! `dom-router`
 is a URL hash to DOM router which automatically, & intelligently toggles visibility of `Elements` based on `popstate`
 events.

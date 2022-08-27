@@ -1,23 +1,17 @@
-const Nightmare = require("nightmare"),
-	turtleio = require("turtle.io"),
+"use strict";
+
+const http = require("http"),
+	ip = "127.0.0.1",
 	port = 8001,
 	ms = 5000,
 	defaults = {
 		gotoTimeout: ms,
 		loadTimeout: ms
 	};
+	router = require("woodland")({autoindex: true, defaultHeaders: {"cache-control": "no-cache", "content-type": "text/plain; charset=utf-8"}, time: true});
 
-turtleio({
-	port: port,
-	default: "localhost",
-	root: __dirname,
-	hosts: {
-		localhost: "www"
-	},
-	logging: {
-		enabled: false
-	}
-}).start();
+router.get("/(.*)?", (req, res) => router.serve(req, res, req.parsed.pathname.substring(1)));
+http.createServer(router.route).listen(port, ip);
 
 describe("Multi-tier", function () {
 	it("GET without hash - returns #main", function () {
