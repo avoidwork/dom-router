@@ -3,6 +3,7 @@ const path = require("path"),
 	ip = "127.0.0.1",
 	port = 8001,
 	url = `http://${ip}:${port}/index.html`,
+	webroot = path.join(__dirname, "www"),
 	router = require("woodland")({
 		defaultHeaders: {
 			"cache-control": "no-cache",
@@ -14,7 +15,7 @@ const path = require("path"),
 		time: false
 	});
 
-router.get("/.*?", (req, res) => router.serve(req, res, req.parsed.pathname.substring(1), path.join(__dirname, "www")));
+router.get("/.*?", (req, res) => router.serve(req, res, req.parsed.pathname.substring(1), webroot));
 http.createServer(router.route).listen(port, ip);
 
 describe("Tabbed UI Tests", function () {
@@ -32,6 +33,16 @@ describe("Tabbed UI Tests", function () {
 		browser
 			.waitForElementVisible("body")
 			.click("a[href='#settings/billing']")
+			.assert.visible("#settings")
+			.assert.visible("#billing")
+			.assert.not.visible("#password")
+			.assert.not.visible("#main")
+			.expect.url().to.endWith("#settings/billing");
+	});
+
+	it("Sticky routing - returns #settings/billing", function (browser) {
+		browser
+			.waitForElementVisible("body")
 			.assert.visible("#settings")
 			.assert.visible("#billing")
 			.assert.not.visible("#password")
