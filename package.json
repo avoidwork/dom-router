@@ -19,7 +19,7 @@
     "node": ">= 16.0.0"
   },
   "scripts": {
-    "build": "npm run rollup",
+    "build": "rm -rf dist/* && npm run rollup",
     "rollup": "npm run test && rollup --config",
     "test": "eslint *.js src/*.js"
   },
