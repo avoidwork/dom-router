@@ -13,44 +13,45 @@ const bannerShort = `/*!
  ${year} Jason Mulligan <jason.mulligan@avoidwork.com>
  @version ${pkg.version}
 */`;
-const defaultOutBase = {compact: true, name: pkg.name};
-const umdOutBase = {...defaultOutBase, banner: bannerLong, format: "umd"};
-const umdOutBaseMin = {...umdOutBase, banner: bannerShort, plugins: [terser()], sourcemap: true};
-const esmOutBase = {...defaultOutBase, banner: bannerLong, format: "esm"};
-const esmOutBaseMin = {...esmOutBase, banner: bannerShort, plugins: [terser()], sourcemap: true};
+const defaultOutBase = {compact: true, banner: bannerLong, name: pkg.name};
+const cjOutBase = {...defaultOutBase, format: "cjs", exports: "named"};
+const esmOutBase = {...defaultOutBase, format: "esm"};
+const umdOutBase = {...defaultOutBase, format: "umd"};
+const minOutBase = {banner: bannerShort, name: pkg.name, plugins: [terser()], sourcemap: true};
+
 
 export default [
 	{
 		input: "./src/router.js",
 		output: [
 			{
-				banner: bannerLong,
-				file: `dist/${pkg.name}.cjs.js`,
-				format: "cjs",
-				exports: "named"
+				...cjOutBase,
+				file: `dist/${pkg.name}.cjs.js`
 			},
 			{
 				...esmOutBase,
 				file: `dist/${pkg.name}.esm.js`
 			},
 			{
-				...esmOutBaseMin,
+				...esmOutBase,
+				...minOutBase,
 				file: `dist/${pkg.name}.esm.min.js`
 			},
 			{
 				...umdOutBase,
-				banner: bannerLong,
 				file: `dist/${pkg.name}.js`,
 				name: "domRouter"
 			},
 			{
-				...umdOutBaseMin,
+				...umdOutBase,
+				...minOutBase,
 				file: `dist/${pkg.name}.min.js`,
 				name: "domRouter"
 			},
 			{
 				...umdOutBase,
-				file: `test/www/${pkg.name}.js`,
+				...minOutBase,
+				file: `tests/specs/basic/www/${pkg.name}.js`,
 				name: "domRouter"
 			}
 		]

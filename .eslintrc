@@ -12,6 +12,8 @@
   "globals": {
     "describe": true,
     "it": true,
+    "after": true,
+    "before": true,
     "expect": true
   },
   "rules": {

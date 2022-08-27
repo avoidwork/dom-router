@@ -12,7 +12,7 @@ const empty = "";
 const hash = "#";
 const notHash = /.*\#/;
 const render = window.requestAnimationFrame;
-const selectorHasHash = "a[href*='#']";class Route {
+const selectorHasHash = "a[href^='#']";class Route {
 	constructor (cfg) {
 		this.hash = cfg.hash;
 		this.element = cfg.element;

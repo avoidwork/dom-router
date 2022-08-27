@@ -5,20 +5,14 @@
  * @license BSD-3-Clause
  * @version 5.0.0
  */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-const cssCurrent = "dr-current";
+'use strict';Object.defineProperty(exports,'__esModule',{value:true});const cssCurrent = "dr-current";
 const cssHidden = "dr-hidden";
 const delimiter = "/";
 const empty = "";
 const hash = "#";
 const notHash = /.*\#/;
 const render = window.requestAnimationFrame;
-const selectorHasHash = "a[href*='#']";
-
-class Route {
+const selectorHasHash = "a[href^='#']";class Route {
 	constructor (cfg) {
 		this.hash = cfg.hash;
 		this.element = cfg.element;
@@ -29,9 +23,7 @@ class Route {
 
 function route (cfg = {element: null, hash: "", trigger: null}) {
 	return new Route(cfg);
-}
-
-class Router {
+}class Router {
 	constructor ({active = true, callback = function () {}, css = {current: cssCurrent, hidden: cssHidden}, ctx = document.body, start = null, delimiter: delimiter$1 = delimiter, logging = false, stickyPos = true, stickyRoute = true, stop = true, storage = "session", storageKey = "lastRoute"} = {}) {
 		this.active = active;
 		this.callback = callback;
@@ -215,6 +207,4 @@ function router (arg) {
 	}
 
 	return obj;
-}
-
-exports.router = router;
+}exports.router=router;
