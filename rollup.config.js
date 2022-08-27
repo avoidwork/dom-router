@@ -1,8 +1,7 @@
 import pkg from "./package.json";
+
 const {terser} = require("rollup-plugin-terser");
-
 const year = new Date().getFullYear();
-
 const bannerLong = `/**
  * ${pkg.name}
  *
@@ -10,14 +9,15 @@ const bannerLong = `/**
  * @license ${pkg.license}
  * @version ${pkg.version}
  */`;
-
 const bannerShort = `/*!
  ${year} Jason Mulligan <jason.mulligan@avoidwork.com>
  @version ${pkg.version}
 */`;
-
-const umdOutBase = { compact: true, format: "umd", name: pkg.author };
-const esmOutBase = { compact: true, format: "esm", name: pkg.author };
+const defaultOutBase = {compact: true, name: pkg.name};
+const umdOutBase = {...defaultOutBase, banner: bannerLong, format: "umd"};
+const umdOutBaseMin = {...umdOutBase, banner: bannerShort, plugins: [terser()], sourcemap: true};
+const esmOutBase = {...defaultOutBase, banner: bannerLong, format: "esm"};
+const esmOutBaseMin = {...esmOutBase, banner: bannerShort, plugins: [terser()], sourcemap: true};
 
 export default [
 	{
@@ -31,15 +31,11 @@ export default [
 			},
 			{
 				...esmOutBase,
-				banner: bannerLong,
 				file: `dist/${pkg.name}.esm.js`
 			},
 			{
-				...esmOutBase,
-				banner: bannerShort,
-				file: `dist/${pkg.name}.esm.min.js`,
-				plugins: [terser()],
-				sourcemap: true
+				...esmOutBaseMin,
+				file: `dist/${pkg.name}.esm.min.js`
 			},
 			{
 				...umdOutBase,
@@ -48,20 +44,14 @@ export default [
 				name: "domRouter"
 			},
 			{
-				...umdOutBase,
-				banner: bannerShort,
+				...umdOutBaseMin,
 				file: `dist/${pkg.name}.min.js`,
-				name: "domRouter",
-				plugins: [terser()],
-				sourcemap: true
+				name: "domRouter"
 			},
 			{
 				...umdOutBase,
-				banner: bannerShort,
-				file: `dist/${pkg.name}.min.js`,
-				name: "domRouter",
-				plugins: [terser()],
-				sourcemap: true
+				file: `test/www/${pkg.name}.js`,
+				name: "domRouter"
 			}
 		]
 	}

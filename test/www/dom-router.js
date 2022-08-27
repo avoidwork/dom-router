@@ -1,1 +1,210 @@
-!function(t,s){"object"==typeof exports&&"undefined"!=typeof module?s(exports):"function"==typeof define&&define.amd?define(["exports"],s):s((t="undefined"!=typeof globalThis?globalThis:t||self).domRouter={})}(this,(function(t){"use strict";const s="",e=/.*\#/,i=window.requestAnimationFrame;class o{constructor(t){this.hash=t.hash,this.element=t.element,this.trigger=t.trigger,this.timestamp=(new Date).toISOString()}}class r{constructor({active:t=!0,callback:s=function(){},css:e={current:"dr-current",hidden:"dr-hidden"},ctx:i=document.body,start:o=null,delimiter:r="/",logging:h=!1,stickyPos:n=!0,stickyRoute:c=!0,stop:l=!0,storage:a="session",storageKey:d="lastRoute"}={}){this.active=t,this.callback=s,this.css=e,this.ctx=i,this.delimiter=r,this.history=[],this.logging=h,this.routes=[],this.stickyPos=n,this.stickyRoute=c,this.storage="session"===a?sessionStorage:localStorage,this.storageKey=d,this.stop=l,this.start=this.stickyRoute&&this.storage.getItem(this.storageKey)||o}current(){return this.history[this.history.length-1]}handler(){const t=this.history.length>0&&(this.current().hash||s).replace(e,s)||null,r=location.hash.includes("#")?location.hash.replace(e,s):null;if(this.active&&this.valid(r))if(this.routes.includes(r)){const e=document.body.scrollTop,h=t?t.split(this.delimiter):[],n=r.split(this.delimiter),c=[];let l=s;for(const t of h)l+=`${l.length>0?`${this.delimiter}`:s}${t}`,c.push(...this.select(`a[href="#${l}"]`));i((()=>{let t,s;for(const t of c)t.classList.remove(this.css.current);for(const e of n.keys()){const i=e+1,o=h.length>=i,r=o?this.select(`#${h.slice(0,i).join(" #")}`):void 0,c=o?this.select(`a[href='#${h.slice(0,i).join(this.delimiter)}']`):void 0;t=this.select(`#${n.slice(0,i).join(" #")}`),s=this.select(`a[href='#${n.slice(0,i).join(this.delimiter)}']`),this.load(c,r,s,t)}this.stickyRoute&&this.storage.setItem(this.storageKey,r),this.stickyPos&&(document.body.scrollTop=e);const i=function(t={element:null,hash:"",trigger:null}){return new o(t)}({element:t,hash:r,trigger:s});this.log(i),this.callback(i)}))}else this.route(this.routes.filter((t=>t.includes(r)))[0]||this.start);return this}load(t=[],s=[],e=[],i=[]){for(const s of t)s.classList.remove(this.css.current);for(const[t,e]of s.entries())e.id!==i[t]?.id&&e.classList.add(this.css.hidden);for(const t of e)t.classList.add(this.css.current);for(const t of i)this.sweep(t,this.css.hidden);return this}log(t){return this.history.push(this.logging?t:{hash:t.hash}),this}popstate(t){return this.handler(t),this}process(){const t=document.location.hash.replace("#",s);this.scan(this.start),this.ctx.classList.contains(this.css.hidden)||(t.length>0&&this.routes.includes(t)?this.handler():this.route(this.start))}route(t=""){return document.location.hash=t,this}select(t){return Array.from(this.ctx.querySelectorAll.call(this.ctx,t)).filter((t=>null!==t))}scan(t=""){const i=null===t?s:t;return this.routes=Array.from(new Set(this.select("a[href*='#']").map((t=>t.href.replace(e,s))).filter((t=>t!==s)))),i.length>0&&!this.routes.includes(i)&&this.routes.push(i),this.start=i||this.routes[0]||null,this}sweep(t,s){return i((()=>{Array.from(t.parentNode.childNodes).filter((s=>1===s.nodeType&&s.id&&s.id!==t.id)).forEach((t=>t.classList.add(s))),t.classList.remove(s)})),this}valid(t=""){return t===s||!1===/=/.test(t)}}t.router=function(t){const s=new r(t);return s.popstate=s.popstate.bind(s),"addEventListener"in window?window.addEventListener("popstate",s.popstate,!1):window.onpopstate=s.popstate,s.active&&s.process(),s},Object.defineProperty(t,"__esModule",{value:!0})}));
+/**
+ * dom-router
+ *
+ * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @license BSD-3-Clause
+ * @version 5.0.0
+ */
+(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.domRouter={}));})(this,(function(exports){'use strict';const cssCurrent = "dr-current";
+const cssHidden = "dr-hidden";
+const delimiter = "/";
+const empty = "";
+const hash = "#";
+const notHash = /.*\#/;
+const render = window.requestAnimationFrame;
+const selectorHasHash = "a[href*='#']";class Route {
+	constructor (cfg) {
+		this.hash = cfg.hash;
+		this.element = cfg.element;
+		this.trigger = cfg.trigger;
+		this.timestamp = new Date().toISOString();
+	}
+}
+
+function route (cfg = {element: null, hash: "", trigger: null}) {
+	return new Route(cfg);
+}class Router {
+	constructor ({active = true, callback = function () {}, css = {current: cssCurrent, hidden: cssHidden}, ctx = document.body, start = null, delimiter: delimiter$1 = delimiter, logging = false, stickyPos = true, stickyRoute = true, stop = true, storage = "session", storageKey = "lastRoute"} = {}) {
+		this.active = active;
+		this.callback = callback;
+		this.css = css;
+		this.ctx = ctx;
+		this.delimiter = delimiter$1;
+		this.history = [];
+		this.logging = logging;
+		this.routes = [];
+		this.stickyPos = stickyPos;
+		this.stickyRoute = stickyRoute;
+		this.storage = storage === "session" ? sessionStorage : localStorage;
+		this.storageKey = storageKey;
+		this.stop = stop;
+		this.start = this.stickyRoute ? this.storage.getItem(this.storageKey) || start : start;
+	}
+
+	current () {
+		return this.history[this.history.length - 1];
+	}
+
+	handler () {
+		const oldHash = this.history.length > 0 ? (this.current().hash || empty).replace(notHash, empty) || null : null,
+			newHash = location.hash.includes(hash) ? location.hash.replace(notHash, empty) : null;
+
+		if (this.active && this.valid(newHash)) {
+			if (!this.routes.includes(newHash)) {
+				this.route(this.routes.filter(i => i.includes(newHash))[0] || this.start);
+			} else {
+				const y = document.body.scrollTop,
+					oldHashes = oldHash ? oldHash.split(this.delimiter) : [],
+					newHashes = newHash.split(this.delimiter),
+					remove = [];
+				let oldRoute = empty;
+
+				for (const loldHash of oldHashes) {
+					oldRoute += `${oldRoute.length > 0 ? `${this.delimiter}` : empty}${loldHash}`;
+					remove.push(...this.select(`a[href="#${oldRoute}"]`));
+				}
+
+				render(() => {
+					let newEl, newTrigger;
+
+					for (const i of remove) {
+						i.classList.remove(this.css.current);
+					}
+
+					for (const idx of newHashes.keys()) {
+						const nth = idx + 1,
+							valid = oldHashes.length >= nth,
+							oldEl = valid ? this.select(`#${oldHashes.slice(0, nth).join(" #")}`) : void 0,
+							oldTrigger = valid ? this.select(`a[href='#${oldHashes.slice(0, nth).join(this.delimiter)}']`) : void 0;
+
+						newEl = this.select(`#${newHashes.slice(0, nth).join(" #")}`);
+						newTrigger = this.select(`a[href='#${newHashes.slice(0, nth).join(this.delimiter)}']`);
+						this.load(oldTrigger, oldEl, newTrigger, newEl);
+					}
+
+					if (this.stickyRoute) {
+						this.storage.setItem(this.storageKey, newHash);
+					}
+
+					if (this.stickyPos) {
+						document.body.scrollTop = y;
+					}
+
+					const r = route({
+						element: newEl,
+						hash: newHash,
+						trigger: newTrigger
+					});
+
+					this.log(r);
+					this.callback(r);
+				});
+			}
+		}
+
+		return this;
+	}
+
+	load (oldTrigger = [], oldEl = [], newTrigger = [], newEl = []) {
+		for (const i of oldTrigger) {
+			i.classList.remove(this.css.current);
+		}
+
+		for (const [idx, i] of oldEl.entries()) {
+			if (i.id !== newEl[idx]?.id) {
+				i.classList.add(this.css.hidden);
+			}
+		}
+
+		for (const i of newTrigger) {
+			i.classList.add(this.css.current);
+		}
+
+		for (const i of newEl) {
+			this.sweep(i, this.css.hidden);
+		}
+
+		return this;
+	}
+
+	log (arg) {
+		this.history.push(this.logging ? arg : {hash: arg.hash});
+
+		return this;
+	}
+
+	popstate (ev) {
+		this.handler(ev);
+
+		return this;
+	}
+
+	process () {
+		const lhash = document.location.hash.replace(hash, empty);
+
+		this.scan(this.start);
+
+		if (!this.ctx.classList.contains(this.css.hidden)) {
+			if (lhash.length > 0 && this.routes.includes(lhash)) {
+				this.handler();
+			} else {
+				this.route(this.start);
+			}
+		}
+	}
+
+	route (arg = empty) {
+		document.location.hash = arg;
+
+		return this;
+	}
+
+	select (arg) {
+		return Array.from(this.ctx.querySelectorAll.call(this.ctx, arg)).filter(i => i !== null);
+	}
+
+	scan (input = empty) {
+		const arg = input === null ? empty : input;
+
+		this.routes = Array.from(new Set(this.select(selectorHasHash).map(i => i.href.replace(notHash, empty)).filter(i => i !== empty)));
+
+		if (arg.length > 0 && !this.routes.includes(arg)) {
+			this.routes.push(arg);
+		}
+
+		this.start = arg || this.routes[0] || null;
+
+		return this;
+	}
+
+	sweep (obj, klass) {
+		render(() => {
+			Array.from(obj.parentNode.childNodes).filter(i => i.nodeType === 1 && i.id && i.id !== obj.id).forEach(i => i.classList.add(klass));
+			obj.classList.remove(klass);
+		});
+
+		return this;
+	}
+
+	valid (arg = empty) {
+		return arg === empty || (/=/).test(arg) === false;
+	}
+}
+
+function router (arg) {
+	const obj = new Router(arg);
+
+	obj.popstate = obj.popstate.bind(obj);
+
+	if ("addEventListener" in window) {
+		window.addEventListener("popstate", obj.popstate, false);
+	} else {
+		window.onpopstate = obj.popstate;
+	}
+
+	if (obj.active) {
+		obj.process();
+	}
+
+	return obj;
+}exports.router=router;Object.defineProperty(exports,'__esModule',{value:true});}));
