@@ -14,7 +14,7 @@ const path = require("path"),
 		time: false
 	});
 
-router.get("/(.*)?", (req, res) => router.serve(req, res, req.parsed.pathname.substring(1), path.join(__dirname, "www")));
+router.get("/.*?", (req, res) => router.serve(req, res, req.parsed.pathname.substring(1), path.join(__dirname, "www")));
 http.createServer(router.route).listen(port, ip);
 
 describe("Tabbed UI Tests", function () {
