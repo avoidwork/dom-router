@@ -7,8 +7,14 @@ const http = require("http"),
 	defaults = {
 		gotoTimeout: ms,
 		loadTimeout: ms
-	};
-	router = require("woodland")({autoindex: true, defaultHeaders: {"cache-control": "no-cache", "content-type": "text/plain; charset=utf-8"}, time: true});
+	},
+	router = require("woodland")({
+		defaultHeaders: {
+			"cache-control": "no-cache",
+			"content-type": "text/plain; charset=utf-8"
+		},
+		time: true
+	});
 
 router.get("/(.*)?", (req, res) => router.serve(req, res, req.parsed.pathname.substring(1)));
 http.createServer(router.route).listen(port, ip);

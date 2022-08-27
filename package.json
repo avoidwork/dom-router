@@ -24,8 +24,10 @@
   "scripts": {
     "build": "rm -rf dist/* && npm run rollup",
     "changelog": "auto-changelog -p",
-    "rollup": "npm run test && rollup --config",
-    "test": "eslint *.js src/*.js"
+    "rollup": "npm run lint && rollup --config",
+    "lint": "eslint *.js src/*.js",
+    "mocha": "mocha",
+    "test": "npm run lint && npm run mocha"
   },
   "devDependencies": {
     "auto-changelog": "^2.4.0",
