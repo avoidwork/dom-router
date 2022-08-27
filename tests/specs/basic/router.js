@@ -8,7 +8,10 @@ const path = require("path"),
 			"cache-control": "no-cache",
 			"content-type": "text/plain; charset=utf-8"
 		},
-		time: true
+		logging: {
+			enabled: false
+		},
+		time: false
 	});
 
 router.get("/(.*)?", (req, res) => router.serve(req, res, req.parsed.pathname.substring(1), path.join(__dirname, "www")));
