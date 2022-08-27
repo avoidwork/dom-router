@@ -10,7 +10,7 @@ const cssHidden = "dr-hidden";
 const delimiter = "/";
 const empty = "";
 const hash = "#";
-const notHash = /.*\#/;
+const notHash = /.*#/;
 const render = window.requestAnimationFrame;
 const selectorHasHash = "a[href^='#']";class Route {
 	constructor (cfg) {
