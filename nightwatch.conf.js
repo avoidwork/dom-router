@@ -22,18 +22,6 @@ module.exports = {
 				server_path: ""
 			}
 		},
-		safari: {
-			desiredCapabilities: {
-				browserName: "safari",
-				alwaysMatch: {
-					acceptInsecureCerts: false
-				}
-			},
-			webdriver: {
-				start_process: true,
-				server_path: ""
-			}
-		},
 		firefox: {
 			desiredCapabilities: {
 				browserName: "firefox",
