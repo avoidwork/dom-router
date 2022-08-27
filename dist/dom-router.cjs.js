@@ -1,3 +1,10 @@
+/**
+ * dom-router
+ *
+ * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @license BSD-3-Clause
+ * @version 5.0.0
+ */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
