@@ -159,8 +159,10 @@ class Router {
 	}
 
 	sweep (obj, klass) {
-		Array.from(obj.parentNode.childNodes).filter(i => i.nodeType === 1 && i.id && i.id !== obj.id).forEach(i => i.classList.add(klass));
-		obj.classList.remove(klass);
+		render(() => {
+			Array.from(obj.parentNode.childNodes).filter(i => i.nodeType === 1 && i.id && i.id !== obj.id).forEach(i => i.classList.add(klass));
+			obj.classList.remove(klass);
+		});
 
 		return this;
 	}
