@@ -23,12 +23,11 @@
   },
   "scripts": {
     "build": "rm -rf dist/* && npm run rollup",
+    "changelog": "auto-changelog -p",
     "rollup": "npm run test && rollup --config",
     "test": "eslint *.js src/*.js"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.13",
-    "@babel/preset-env": "^7.18.10",
     "auto-changelog": "^2.4.0",
     "eslint": "^8.22.0",
     "mocha": "^10.0.0",
