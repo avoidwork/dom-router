@@ -172,7 +172,7 @@ class Router {
 	}
 }
 
-export function factory (arg) {
+export function router (arg) {
 	const obj = new Router(arg);
 
 	obj.popstate = obj.popstate.bind(obj);

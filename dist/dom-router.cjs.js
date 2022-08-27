@@ -195,7 +195,7 @@ class Router {
 	}
 }
 
-function factory (arg) {
+function router (arg) {
 	const obj = new Router(arg);
 
 	obj.popstate = obj.popstate.bind(obj);
@@ -213,4 +213,4 @@ function factory (arg) {
 	return obj;
 }
 
-exports.factory = factory;
+exports.router = router;
