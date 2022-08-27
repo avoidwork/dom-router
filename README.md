@@ -60,13 +60,12 @@ This would be the result if a user visited `#settings/billing`:
 
 #### Minimal coding required
 ```javascript
-const router = require('dom-router'),
+const {router} = require('dom-router'),
     r = router({callback: arg => console.log(arg.element.id, "is visible")});
 ```
 
 ## How can I load dom-router?
-dom-router can be installed from npm, & bower, and supports CJS, AMD, & script tags.
-When loaded with a script tag, `window.router` will be created. An ES6 version is included in `/lib`.
+When loaded with a script tag, `window.domRouter.router()` will be created.
 
 ## Configuration
 #### active
