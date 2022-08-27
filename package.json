@@ -12,7 +12,10 @@
     "url": "https://github.com/avoidwork/dom-router/issues"
   },
   "license": "BSD-3-Clause",
-  "main": "lib/dom-router",
+  "source": "src/router.js",
+  "browser": "dist/dom-router.js",
+  "main": "dist/dom-router.cjs.js",
+  "module": "dist/dom-router.esm.js",
   "sourceType": "module",
   "engineStrict": true,
   "engines": {

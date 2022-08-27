@@ -5,4 +5,4 @@ export const empty = "";
 export const hash = "#";
 export const notHash = /.*\#/;
 export const render = window.requestAnimationFrame;
-export const selectorHasHash = "a[href=*'#']";
+export const selectorHasHash = "a[href*='#']";
