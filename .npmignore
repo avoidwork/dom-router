@@ -1,9 +1,9 @@
-/.idea/
-/logs/
-/src/
-/test/
-/tests/
-/tests_outputs/
+.idea
+logs
+src
+test
+tests
+tests_output
 .git
 .gitignore
 .eslintrc
