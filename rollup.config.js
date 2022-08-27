@@ -22,6 +22,13 @@ export default [
 				format: "umd",
 				compact: false,
 				plugins: [terser()]
+			},
+			{
+				file: `test/www/${pkg.name}.js`,
+				name: "domRouter",
+				format: "umd",
+				compact: false,
+				plugins: [terser()]
 			}
 		]
 	}

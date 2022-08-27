@@ -145,12 +145,13 @@ class Router {
 		return Array.from(this.ctx.querySelectorAll.call(this.ctx, arg)).filter(i => i !== null);
 	}
 
-	scan (arg = empty) {
+	scan (input = empty) {
+		const arg = input === null ? empty : input;
+
 		this.routes = Array.from(new Set(this.select(selectorHasHash).map(i => i.href.replace(notHash, empty)).filter(i => i !== empty)));
 
-		if (arg.length > 0) {
+		if (arg.length > 0 && !this.routes.includes(arg)) {
 			this.routes.push(arg);
-			this.routes = Array.from(new Set(this.routes));
 		}
 
 		this.start = arg || this.routes[0] || null;
