@@ -1,13 +1,35 @@
-import {cssCurrent, cssHidden, delimiter as slash, empty, hash, notHash, render, selectorHasHash} from "./constants.js";
-import {route} from "./route.js";
+/**
+ * dom-router
+ *
+ * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @license BSD-3-Clause
+ * @version 5.0.0
+ */
+(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.domRouter={}));})(this,(function(exports){'use strict';const cssCurrent = "dr-current";
+const cssHidden = "dr-hidden";
+const delimiter = "/";
+const empty = "";
+const hash = "#";
+const notHash = /.*\#/;
+const render = window.requestAnimationFrame;
+const selectorHasHash = "a[href^='#']";class Route {
+	constructor (cfg) {
+		this.hash = cfg.hash;
+		this.element = cfg.element;
+		this.trigger = cfg.trigger;
+		this.timestamp = new Date().toISOString();
+	}
+}
 
-class Router {
-	constructor ({active = true, callback = function () {}, css = {current: cssCurrent, hidden: cssHidden}, ctx = document.body, start = null, delimiter = slash, logging = false, stickyPos = true, stickyRoute = true, stop = true, storage = "session", storageKey = "lastRoute"} = {}) {
+function route (cfg = {element: null, hash: "", trigger: null}) {
+	return new Route(cfg);
+}class Router {
+	constructor ({active = true, callback = function () {}, css = {current: cssCurrent, hidden: cssHidden}, ctx = document.body, start = null, delimiter: delimiter$1 = delimiter, logging = false, stickyPos = true, stickyRoute = true, stop = true, storage = "session", storageKey = "lastRoute"} = {}) {
 		this.active = active;
 		this.callback = callback;
 		this.css = css;
 		this.ctx = ctx;
-		this.delimiter = delimiter;
+		this.delimiter = delimiter$1;
 		this.history = [];
 		this.logging = logging;
 		this.routes = [];
@@ -169,7 +191,7 @@ class Router {
 	}
 }
 
-export function router (arg) {
+function router (arg) {
 	const obj = new Router(arg);
 
 	obj.popstate = obj.popstate.bind(obj);
@@ -185,4 +207,4 @@ export function router (arg) {
 	}
 
 	return obj;
-}
+}exports.router=router;Object.defineProperty(exports,'__esModule',{value:true});}));

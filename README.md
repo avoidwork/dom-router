@@ -1,7 +1,5 @@
 # dom-router
 
-[![build status](https://secure.travis-ci.org/avoidwork/dom-router.svg)](http://travis-ci.org/avoidwork/dom-router)
-
 Imagine you didn't have to write a bunch of JavaScript to get a slick, progressively enhanced interface! `dom-router`
 is a URL hash to DOM router which automatically, & intelligently toggles visibility of `Elements` based on `popstate`
 events.
@@ -62,13 +60,12 @@ This would be the result if a user visited `#settings/billing`:
 
 #### Minimal coding required
 ```javascript
-const router = require('dom-router'),
+const {router} = require('dom-router'),
     r = router({callback: arg => console.log(arg.element.id, "is visible")});
 ```
 
 ## How can I load dom-router?
-dom-router can be installed from npm, & bower, and supports CJS, AMD, & script tags.
-When loaded with a script tag, `window.router` will be created. An ES6 version is included in `/lib`.
+When loaded with a script tag, `window.domRouter.router()` will be created.
 
 ## Configuration
 #### active
@@ -91,6 +88,18 @@ Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each ti
 
 #### start
 [Optional] The starting route to display if one is not specified, or an invalid route is specified
+
+#### stickyPos
+`Boolean` which enables/disables remaining at `Y position` when the route changes, i.e. no scrolling.
+
+#### stickyRoute
+`Boolean` which enables/disables sticky routing.
+
+#### storage
+`String` Storage used for `stickyRoute`, defaults to `session`; valid options are `session` or `local`.
+
+#### storageKey
+`String` Key for persistent storage for `stickyRoute`.
 
 ## API
 #### current()

@@ -1,7 +1,7 @@
 {
   "name": "dom-router",
   "description": "URL hash DOM router",
-  "version": "4.0.3",
+  "version": "5.0.0",
   "homepage": "https://github.com/avoidwork/dom-router",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -12,31 +12,37 @@
     "url": "https://github.com/avoidwork/dom-router/issues"
   },
   "license": "BSD-3-Clause",
-  "main": "lib/dom-router",
+  "source": "src/router.js",
+  "browser": "dist/dom-router.js",
+  "main": "dist/dom-router.cjs.js",
+  "module": "dist/dom-router.esm.js",
+  "sourceType": "module",
   "engineStrict": true,
   "engines": {
-    "node": ">= 8.6.0"
+    "node": ">= 16.0.0"
   },
   "scripts": {
-    "build": "grunt",
-    "test": "grunt test"
+    "build": "npm run lint && rm -rf dist/* && npm run rollup && npm run ui",
+    "changelog": "auto-changelog -p",
+    "rollup": "rollup --config",
+    "lint": "eslint *.js src/*.js tests/specs/basic/router.js",
+    "nightwatch": "npm run nightwatch-chrome && npm run nightwatch-firefox",
+    "nightwatch-chrome": "nightwatch tests/specs/basic/router.js --env chrome",
+    "nightwatch-firefox": "nightwatch tests/specs/basic/router.js --env firefox",
+    "nightwatch-dirs": "mkdir -p tests/page-objects && mkdir -p tests/custom-commands && mkdir -p tests/custom-assertions && mkdir -p tests/specs/basic",
+    "ui": "npm run nightwatch-dirs && npm run nightwatch",
+    "test": "npm run lint && npm run ui"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-minify": "^0.5.1",
-    "grunt": "^1.2.1",
-    "grunt-cli": "^1.3.2",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-nodeunit": "^2.1.0",
-    "grunt-contrib-uglify": "^4.0.1",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^23.0.0",
-    "grunt-mocha-test": "^0.13.3",
-    "grunt-replace": "^1.0.1",
-    "mocha": "^6.1.4",
-    "nightmare": "^2.10.0",
-    "turtle.io": "^7.6.1"
+    "auto-changelog": "^2.4.0",
+    "chromedriver": "^104.0.0",
+    "eslint": "^8.22.0",
+    "geckodriver": "^3.0.2",
+    "nightwatch": "^2.3.3",
+    "rollup": "^2.78.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.8.2",
+    "woodland": "^16.1.3"
   },
   "keywords": [
     "DOM",
