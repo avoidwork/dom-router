@@ -111,8 +111,8 @@ class Router {
 			i.classList.remove(this.css.current);
 		}
 
-		if (oldEl.length > 0 && oldEl.id !== newEl.id) {
-			for (const i of oldEl) {
+		for (const [idx, i] of oldEl.entries()) {
+			if (i.id !== newEl[idx]?.id) {
 				i.classList.add(this.css.hidden);
 			}
 		}
@@ -121,10 +121,8 @@ class Router {
 			i.classList.add(this.css.current);
 		}
 
-		if (oldEl.length > 0 && oldEl.id !== newEl.id) {
-			for (const i of oldEl) {
-				i.classList.add(this.css.hidden);
-			}
+		for (const i of newEl) {
+			this.sweep(i, this.css.hidden);
 		}
 
 		return this;
