@@ -90,6 +90,18 @@ Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each ti
 #### start
 [Optional] The starting route to display if one is not specified, or an invalid route is specified
 
+#### stickyPos
+`Boolean` which enables/disables remaining at `Y position` when the route changes, i.e. no scrolling.
+
+#### stickyRoute
+`Boolean` which enables/disables sticky routing.
+
+#### storage
+`String` Storage used for `stickyRoute`, defaults to `session`; valid options are `session` or `local`.
+
+#### storageKey
+`String` Key for persistent storage for `stickyRoute`.
+
 ## API
 #### current()
 Returns the current `Route`; if logging is enabled the trigger `Element` will be present

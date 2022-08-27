@@ -1,4 +1,4 @@
-import {cssCurrent, cssHidden, delimiter as slash, empty, hash, notHash, selectorHasHash} from "./constants.js";
+import {cssCurrent, cssHidden, delimiter as slash, empty, hash, notHash, render, selectorHasHash} from "./constants.js";
 import {route} from "./route.js";
 
 class Router {
@@ -39,10 +39,7 @@ class Router {
 
 				for (const loldHash of oldHashes) {
 					oldRoute += `${oldRoute.length > 0 ? `${this.delimiter}` : empty}${loldHash}`;
-
-					const elements = this.select(`a[href="#${oldRoute}"]`);
-
-					remove.push(...elements)
+					remove.push(...this.select(`a[href="#${oldRoute}"]`));
 				}
 
 				render(() => {
@@ -123,12 +120,12 @@ class Router {
 	}
 
 	process () {
-		const hash = document.location.hash.replace(hash, empty);
+		const lhash = document.location.hash.replace(hash, empty);
 
 		this.scan(this.start);
 
 		if (!this.ctx.classList.contains(this.css.hidden)) {
-			if (hash.length > 0 && this.routes.includes(hash)) {
+			if (lhash.length > 0 && this.routes.includes(lhash)) {
 				this.handler();
 			} else {
 				this.route(this.start);
@@ -145,13 +142,11 @@ class Router {
 	}
 
 	select (arg) {
-		return Array.from(this.ctx.querySelectorAll.call(this.ctx, arg));
+		return Array.from(this.ctx.querySelectorAll.call(this.ctx, arg)).filter(i => i !== null);
 	}
 
 	scan (arg = empty) {
-		const selector = "a[href=*'#']";
-
-		this.routes = Array.from(new Set(this.select(selector).map(i => i.href.replace(notHash, empty)).filter(i => i !== empty)));
+		this.routes = Array.from(new Set(this.select(selectorHasHash).map(i => i.href.replace(notHash, empty)).filter(i => i !== empty)));
 
 		if (arg.length > 0) {
 			this.routes.push(arg);
