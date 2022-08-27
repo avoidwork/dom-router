@@ -154,8 +154,6 @@ class Router {
 				this.route(this.start);
 			}
 		}
-
-		return this;
 	}
 
 	route (arg = empty) {

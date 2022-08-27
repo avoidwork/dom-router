@@ -13,14 +13,14 @@ export default [
 			{
 				file: `dist/${pkg.name}.esm.js`,
 				format: "es",
-				compact: false,
+				compact: true,
 				plugins: [terser()]
 			},
 			{
 				file: `dist/${pkg.name}.js`,
 				name: "domRouter",
 				format: "umd",
-				compact: false,
+				compact: true,
 				plugins: [terser()]
 			},
 			{
