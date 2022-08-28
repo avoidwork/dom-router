@@ -60,8 +60,8 @@ This would be the result if a user visited `#settings/billing`:
 
 #### Minimal coding required
 ```javascript
-const {router} = require('dom-router'),
-    r = router({callback: arg => console.log(arg.element.id, "is visible")});
+import {router} from "./dom-router.js";
+window.appRouter = router({callback: arg => console.log(`${arg.element.id} is visible`)});
 ```
 
 ## How can I load dom-router?
