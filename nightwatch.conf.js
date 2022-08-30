@@ -8,34 +8,18 @@ module.exports = {
 	test_settings: {
 		default: {
 			disable_error_log: false,
-			launch_url: "http://localhost",
+			launch_url: "http://localhost:8000/",
 			screenshots: {
 				enabled: false,
 				path: "screens",
 				on_failure: true
 			},
 			desiredCapabilities: {
-				browserName: "firefox"
+				browserName: "chrome"
 			},
 			webdriver: {
 				start_process: true,
 				server_path: ""
-			}
-		},
-		firefox: {
-			desiredCapabilities: {
-				browserName: "firefox",
-				alwaysMatch: {
-					acceptInsecureCerts: true,
-					"moz:firefoxOptions": {
-						args: []
-					}
-				}
-			},
-			webdriver: {
-				start_process: true,
-				server_path: "",
-				cli_args: []
 			}
 		},
 		chrome: {

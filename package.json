@@ -26,9 +26,8 @@
     "changelog": "auto-changelog -p",
     "rollup": "rollup --config",
     "lint": "eslint *.js src/*.js tests/specs/basic/router.js",
-    "nightwatch": "npm run nightwatch-chrome && npm run nightwatch-firefox",
+    "nightwatch": "npm run nightwatch-chrome",
     "nightwatch-chrome": "nightwatch tests/specs/basic/router.js --env chrome",
-    "nightwatch-firefox": "nightwatch tests/specs/basic/router.js --env firefox",
     "nightwatch-dirs": "mkdir -p tests/page-objects && mkdir -p tests/custom-commands && mkdir -p tests/custom-assertions && mkdir -p tests/specs/basic",
     "ui": "npm run nightwatch-dirs && npm run nightwatch",
     "test": "npm run lint && npm run ui"
