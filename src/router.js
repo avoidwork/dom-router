@@ -78,7 +78,7 @@ class Router {
 					if (!this.stickySearchParams) {
 						const url = new URL(location.href);
 
-						for (const key of url.searchParams.entries()) {
+						for (const key of url.searchParams.keys()) {
 							url.searchParams.delete(key);
 						}
 
