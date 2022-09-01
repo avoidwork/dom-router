@@ -24,7 +24,7 @@ const selectorHasHash = "a[href^='#']";class Route {
 function route (cfg = {element: null, hash: "", trigger: null}) {
 	return new Route(cfg);
 }class Router {
-	constructor ({active = true, callback = function () {}, css = {current: cssCurrent, hidden: cssHidden}, ctx = document.body, start = null, delimiter: delimiter$1 = delimiter, logging = false, stickyPos = true, stickyRoute = true, stop = true, storage = "session", storageKey = "lastRoute"} = {}) {
+	constructor ({active = true, callback = function () {}, css = {current: cssCurrent, hidden: cssHidden}, ctx = document.body, start = null, delimiter: delimiter$1 = delimiter, logging = false, stickyPos = true, stickyRoute = true, stickySearchParams = false, stop = true, storage = "session", storageKey = "lastRoute"} = {}) {
 		this.active = active;
 		this.callback = callback;
 		this.css = css;
@@ -35,6 +35,7 @@ function route (cfg = {element: null, hash: "", trigger: null}) {
 		this.routes = [];
 		this.stickyPos = stickyPos;
 		this.stickyRoute = stickyRoute;
+		this.stickySearchParams = stickySearchParams;
 		this.storage = storage === "session" ? sessionStorage : localStorage;
 		this.storageKey = storageKey;
 		this.stop = stop;
@@ -95,6 +96,16 @@ function route (cfg = {element: null, hash: "", trigger: null}) {
 						hash: newHash,
 						trigger: newTrigger
 					});
+
+					if (!this.stickySearchParams) {
+						const url = new URL(location.href);
+
+						for (const key of url.searchParams.keys()) {
+							url.searchParams.delete(key);
+						}
+
+						history.replaceState({}, "", url.href);
+					}
 
 					this.log(r);
 					this.callback(r);

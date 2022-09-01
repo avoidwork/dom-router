@@ -22,6 +22,33 @@ module.exports = {
 				server_path: ""
 			}
 		},
+		safari: {
+			desiredCapabilities : {
+				browserName : "safari",
+				alwaysMatch: {
+					acceptInsecureCerts: false
+				}
+			},
+			webdriver: {
+				start_process: true,
+				server_path: ""
+			}
+		},
+
+		firefox: {
+			desiredCapabilities: {
+				browserName: "firefox",
+				alwaysMatch: {
+					acceptInsecureCerts: true,
+					"moz:firefoxOptions": {
+						args: [
+							// "-headless",
+							// "-verbose"
+						]
+					}
+				}
+			}
+		},
 		chrome: {
 			desiredCapabilities: {
 				browserName: "chrome",

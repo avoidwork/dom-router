@@ -90,10 +90,13 @@ Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each ti
 [Optional] The starting route to display if one is not specified, or an invalid route is specified
 
 ### stickyPos
-`Boolean` which enables/disables remaining at `Y position` when the route changes, i.e. no scrolling.
+`Boolean` which enables/disables remaining at `Y position` when the route changes, i.e. no scrolling, defaults to `true`.
 
 ### stickyRoute
-`Boolean` which enables/disables sticky routing.
+`Boolean` which enables/disables sticky routing, defaults to `true`.
+
+### stickySearchParams
+`Boolean` which enables/disables sticky `searchParams` of `URL`, defaults to `false`. When it enabled `history.replaceState()` is executed on `location` before `callback()`.
 
 ### storage
 `String` Storage used for `stickyRoute`, defaults to `session`; valid options are `session` or `local`.
