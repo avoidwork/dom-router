@@ -1,10 +1,14 @@
-const path = require("path"),
-	http = require("http"),
-	ip = "127.0.0.1",
+import {join} from "node:path";
+import {createServer} from "node:http";
+import {fileURLToPath} from "node:url";
+import {default as woodland} from "woodland";
+
+const ip = "127.0.0.1",
 	port = 8001,
+	__dirname = fileURLToPath(new URL(".", import.meta.url)),
+	webroot = join(__dirname, "www"),
 	url = `http://${ip}:${port}/index.html`,
-	webroot = path.join(__dirname, "www"),
-	router = require("woodland")({
+	router = woodland({
 		defaultHeaders: {
 			"cache-control": "no-cache",
 			"content-type": "text/plain; charset=utf-8"
@@ -16,7 +20,7 @@ const path = require("path"),
 	});
 
 router.get("/.*?", (req, res) => router.serve(req, res, req.parsed.pathname.substring(1), webroot));
-http.createServer(router.route).listen(port, ip);
+createServer(router.route).listen(port, ip);
 
 describe("Tabbed UI Tests", function () {
 	before(browser => browser.navigateTo(url));
