@@ -96,7 +96,7 @@ Multi-tier routing delimiter, defaults to `/`, e.g. `#settings/billing`; each ti
 `Boolean` which enables/disables sticky routing, defaults to `true`.
 
 ### stickySearchParams
-`Boolean` which enables/disables sticky `searchParams` of `URL`, defaults to `false`. When it enabled `history.replaceState()` is executed on `location` before `callback()`.
+`Boolean` which enables/disables sticky `searchParams` of `location`, defaults to `false`. When it disabled `history.replaceState()` is executed on `location` before `callback()`.
 
 ### storage
 `String` Storage used for `stickyRoute`, defaults to `session`; valid options are `session` or `local`.
