@@ -165,7 +165,13 @@ function route (cfg = {element: null, hash: "", trigger: null}) {
 	}
 
 	route (arg = empty) {
-		document.location.hash = arg;
+		const url = new URL(location.href);
+
+		if (url.hash !== arg) {
+			url.hash = arg;
+			history.pushState({}, "", url.href);
+			this.handler();
+		}
 
 		return this;
 	}
