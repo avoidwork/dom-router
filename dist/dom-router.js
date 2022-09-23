@@ -3,7 +3,7 @@
  *
  * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 5.1.2
+ * @version 5.1.3
  */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.domRouter={}));})(this,(function(exports){'use strict';const cssCurrent = "dr-current";
 const cssHidden = "dr-hidden";
@@ -167,7 +167,7 @@ function route (cfg = {element: null, hash: "", trigger: null}) {
 	route (arg = empty) {
 		const url = new URL(location.href);
 
-		if (url.hash !== arg) {
+		if (url.hash.replace("#", "") !== arg) {
 			url.hash = arg;
 			history.pushState({}, "", url.href);
 			this.handler();

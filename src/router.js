@@ -145,7 +145,7 @@ class Router {
 	route (arg = empty) {
 		const url = new URL(location.href);
 
-		if (url.hash !== arg) {
+		if (url.hash.replace("#", "") !== arg) {
 			url.hash = arg;
 			history.pushState({}, "", url.href);
 			this.handler();
