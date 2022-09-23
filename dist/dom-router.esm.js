@@ -3,7 +3,7 @@
  *
  * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 5.1.1
+ * @version 5.1.2
  */
 const cssCurrent = "dr-current";
 const cssHidden = "dr-hidden";

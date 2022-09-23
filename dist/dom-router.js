@@ -3,7 +3,7 @@
  *
  * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 5.1.1
+ * @version 5.1.2
  */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.domRouter={}));})(this,(function(exports){'use strict';const cssCurrent = "dr-current";
 const cssHidden = "dr-hidden";
